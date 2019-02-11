@@ -1,0 +1,13 @@
+{
+  "name": "serverless",
+  "version": "1.0.0",
+  "description": "Lambda functions using framework 'Serverless'",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Boris Grubesic",
+  "license": "ISC",
+  "dependencies": {
+    "node-fetch": "^2.3.0"
+  }
+}
