@@ -45,6 +45,7 @@ provider:
   environment:
     GITHUB_CLIENT: ${file(./config/config.json):GITHUB_CLIENT}
     GITHUB_CLIENT_SECRET: ${file(./config/config.json):GITHUB_CLIENT_SECRET}
+    GITHUB_API_STATE: ${file(./config/config.json):GITHUB_API_STATE}
 
 # you can add packaging information here
 #package:
@@ -67,6 +68,12 @@ functions:
     events:
       - http:
           path: authCallback
+          method: GET
+  validate:
+    handler: getUser.main
+    events:
+      - http:
+          path: getUser
           method: GET
 
 #    The following are a few example events you can configure
