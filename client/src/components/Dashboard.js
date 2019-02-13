@@ -1,5 +1,7 @@
 import React, { Component } from 'react'
 import Navbar from './Navbar'
+import Sidebar from './Sidebar'
+import Organization from './Organization'
 import '../bootstrap-social.css'
 import qs from 'qs'
 
@@ -29,7 +31,7 @@ class Dashboard extends Component {
     }
 
     async doLogin(token) {
-        this.setState({isLoading: true})
+        this.setState({ isLoading: true })
 
         try {
             let user = await fetch(`https://t3bi6cl38c.execute-api.eu-north-1.amazonaws.com/dev/getUser?access_token=${token}`)
@@ -38,20 +40,24 @@ class Dashboard extends Component {
                 window.sessionStorage.setItem('token', token)
                 user = await user.json()
 
+                let orgs = await this.getOrganizations()
+
                 this.setState({
                     isLoading: false,
                     isAuthorized: true,
                     user: {
                         nick: user.login,
-                        avatarURL: user.avatar_url
+                        avatarURL: user.avatar_url,
+                        organizations: orgs
                     }
                 })
+
             }
         } catch (err) {
             console.log(err)
         }
-        
-        this.getOrganizations()
+
+
     }
 
     async getOrganizations() {
@@ -59,7 +65,7 @@ class Dashboard extends Component {
             let orgs = await fetch(`https://api.github.com/user/orgs?access_token=${window.sessionStorage.getItem('token')}`)
 
             orgs = await orgs.json()
-            orgs = orgs.map(org => {
+            return orgs.map(org => {
                 return {
                     name: org.login,
                     avatarURL: org.avatar_url,
@@ -68,8 +74,6 @@ class Dashboard extends Component {
                 }
             })
 
-            this.setState({ user: { ...this.state.user, organizations: orgs } });
-            console.log(this.state.user)
         } catch (err) {
             console.log(err)
         }
@@ -78,16 +82,39 @@ class Dashboard extends Component {
     render() {
         if (this.state.isLoading) {
             return (
-                <span>Loading...</span>
+                <div className="text-center login-div">
+                    <span>Loading...</span>
+                </div>
             )
         }
         else if (this.state.isAuthorized) {
             return (
-                <Navbar user={this.state.user.nick} logout={this.logout.bind(this)}/>
+                <React.Fragment>
+                    <Navbar user={this.state.user.nick} logout={this.logout.bind(this)} />
+
+                    <div className="container-fluid">
+                        <div className="row">
+                            <Sidebar />
+                            <main role="main" className="col-md-9 ml-sm-auto col-lg-10 px-4">
+                                <div className="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
+                                    <h1 className="h2">Dashboard</h1>
+                                    <img src={this.state.user.avatarURL} className="user-avatar rounded float-right" alt="user image" />
+                                </div>
+                                <div className="card-deck">
+                                    {this.state.user.organizations.map(org => {
+                                        return (
+                                            <Organization key={org.name} {...org} />
+                                        )
+                                    })}
+                                </div>
+                            </main>
+                        </div>
+                    </div>
+                </React.Fragment>
             )
         } else {
             return (
-                <div>
+                <div className="text-center login-div">
                     <a href="https://t3bi6cl38c.execute-api.eu-north-1.amazonaws.com/dev/auth" className="btn btn-github btn-lg active" role="button" aria-pressed="true">Login at Github</a>
                 </div>
             )
