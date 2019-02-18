@@ -2,14 +2,20 @@ import React, { Component } from 'react'
 import Navbar from './Navbar'
 import Sidebar from './Sidebar'
 import Organization from './Organization'
+import OrganizationDetails from './OrganizationDetails'
 import '../bootstrap-social.css'
 import qs from 'qs'
 
+const PAGE = {
+    DASHBOARD: 0,
+    DETAILS: 1
+}
 
 
 class Dashboard extends Component {
     state = {
-        user: {}
+        user: {},
+        activePage: PAGE.DASHBOARD
     }
 
     componentDidMount() {
@@ -28,6 +34,22 @@ class Dashboard extends Component {
         window.sessionStorage.removeItem('token')
         this.setState({ user: {} })
         window.location.href = '/'
+    }
+
+    displayDashboard(e) {
+        this.setState({
+            activePage: PAGE.DASHBOARD,
+            chosenOrg: {}
+        })
+        
+    }
+
+    displayDetails(e) {
+        const value = e.target.getAttribute('value')
+        this.setState({
+            activePage: PAGE.DETAILS,
+            chosenOrg: this.state.user.organizations.filter(org => org.name === value)[0]
+        })
     }
 
     async doLogin(token) {
@@ -88,25 +110,38 @@ class Dashboard extends Component {
             )
         }
         else if (this.state.isAuthorized) {
+            let activePage
+            if (this.state.activePage === PAGE.DASHBOARD) {
+                activePage = <div className="card-deck">
+                    {this.state.user.organizations.map(org => {
+                        return (
+                            <Organization key={org.name} {...org} displayDetails={this.displayDetails.bind(this)} />
+                        )
+                    })}
+                </div>
+            } 
+
+            if (this.state.activePage === PAGE.DETAILS) {
+                activePage = <OrganizationDetails {...this.state.chosenOrg} />
+            }
+
             return (
                 <React.Fragment>
                     <Navbar user={this.state.user.nick} logout={this.logout.bind(this)} />
 
                     <div className="container-fluid">
                         <div className="row">
-                            <Sidebar />
+                            <Sidebar
+                                active={this.state.activePage}
+                                displayDashboard={this.displayDashboard.bind(this)}
+                            />
                             <main role="main" className="col-md-9 ml-sm-auto col-lg-10 px-4">
                                 <div className="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
                                     <h1 className="h2">Dashboard</h1>
-                                    <img src={this.state.user.avatarURL} className="user-avatar rounded float-right" alt="user image" />
+                                    <img src={this.state.user.avatarURL} className="user-avatar rounded-circle float-right" alt="user image" />
                                 </div>
-                                <div className="card-deck">
-                                    {this.state.user.organizations.map(org => {
-                                        return (
-                                            <Organization key={org.name} {...org} />
-                                        )
-                                    })}
-                                </div>
+
+                                {activePage}
                             </main>
                         </div>
                     </div>
