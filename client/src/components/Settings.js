@@ -56,35 +56,35 @@ class Settings extends Component {
           <h3>Notification settings</h3>
         </div>
         <div className='container'>
-          <div className='row' onChange={this.saveSettings}>
+          <div className='row'>
             <div className='col-md-6'>
               <div className='card' style={{ margin: '50px 0' }}>
                 <ul className='list-group list-group-flush'>
                   <li className='list-group-item'>
                     Repositories
                     <label className='switch '>
-                      <input type='checkbox' checked={this.state.settings.repos} name='repos' className='success' />
+                      <input type='checkbox' checked={this.state.settings.repos} onChange={this.saveSettings} name='repos' className='success' />
                       <span className='slider round' />
                     </label>
                   </li>
                   <li className='list-group-item'>
                     Commits
                     <label className='switch '>
-                      <input type='checkbox' checked={this.state.settings.commits} name='commits' className='success' />
+                      <input type='checkbox' checked={this.state.settings.commits} onChange={this.saveSettings} name='commits' className='success' />
                       <span className='slider round' />
                     </label>
                   </li>
                   <li className='list-group-item'>
                     Issue comments
                     <label className='switch '>
-                      <input type='checkbox' checked={this.state.settings.issueComments} name='issueComments' className='success' />
+                      <input type='checkbox' checked={this.state.settings.issueComments} onChange={this.saveSettings} name='issueComments' className='success' />
                       <span className='slider round' />
                     </label>
                   </li>
                   <li className='list-group-item'>
                     Projects
                     <label className='switch '>
-                      <input type='checkbox' checked={this.state.settings.projects} name='projects' className='success' />
+                      <input type='checkbox' checked={this.state.settings.projects} onChange={this.saveSettings} name='projects' className='success' />
                       <span className='slider round' />
                     </label>
                   </li>
@@ -97,28 +97,28 @@ class Settings extends Component {
                   <li className='list-group-item'>
                     Releases
                     <label className='switch '>
-                      <input type='checkbox' checked={this.state.settings.releases} name='releases' className='success' />
+                      <input type='checkbox' checked={this.state.settings.releases} onChange={this.saveSettings} name='releases' className='success' />
                       <span className='slider round' />
                     </label>
                   </li>
                   <li className='list-group-item'>
                     Deployments
                     <label className='switch '>
-                      <input type='checkbox' checked={this.state.settings.deployments} name='deployments' className='success' />
+                      <input type='checkbox' checked={this.state.settings.deployments} onChange={this.saveSettings} name='deployments' className='success' />
                       <span className='slider round' />
                     </label>
                   </li>
                   <li className='list-group-item'>
                     Forks
                     <label className='switch '>
-                      <input type='checkbox' checked={this.state.settings.forks} name='forks' className='success' />
+                      <input type='checkbox' checked={this.state.settings.forks} onChange={this.saveSettings} name='forks' className='success' />
                       <span className='slider round' />
                     </label>
                   </li>
                   <li className='list-group-item'>
                     Security Alerts
                     <label className='switch '>
-                      <input type='checkbox' checked={this.state.settings.securityAlerts} name='securityAlerts' className='success' />
+                      <input type='checkbox' checked={this.state.settings.securityAlerts} onChange={this.saveSettings} name='securityAlerts' className='success' />
                       <span className='slider round' />
                     </label>
                   </li>
