@@ -4,7 +4,6 @@ const AWS = require('aws-sdk')
 const dynamoDB = new AWS.DynamoDB.DocumentClient()
 
 async function main (event, context) {
-
   const params = {
     TableName: 'settings',
     Key: {
