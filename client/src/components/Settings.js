@@ -14,9 +14,12 @@ class Settings extends Component {
     }
   }
 
-  componentDidMount() {
+  async componentDidMount() {
     // TODO: Fetch settings from API for current user and organization and change state. 
+    let res = await fetch(`https://t3bi6cl38c.execute-api.eu-north-1.amazonaws.com/dev/settings/${this.props.org}/${this.props.user}`)
+    res = await res.json()
 
+    this.setState({settings: res})
   }
 
   saveSettings = async (e) => {

@@ -5,7 +5,7 @@ provider:
   runtime: nodejs8.10
   iamRoleStatements:
     - Effect: Allow
-      Action: 
+      Action:
         - dynamodb:DescribeTable
         - dynamodb:Query
         - dynamodb:Scan
@@ -51,7 +51,14 @@ functions:
           path: settings
           method: POST
           cors: true
-          
+  list:
+    handler: getSettings.main
+    events:
+      - http:
+          path: settings/{organization}/{user}
+          method: GET
+          cors: true
+
 resources:
   Resources:
     UserSettingsDynamoDbTable:
@@ -71,4 +78,4 @@ resources:
         ProvisionedThroughput:
           ReadCapacityUnits: 1
           WriteCapacityUnits: 1
-        TableName: 'settings'
+        TableName: "settings"
