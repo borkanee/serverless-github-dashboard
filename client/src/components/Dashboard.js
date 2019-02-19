@@ -45,7 +45,7 @@ class Dashboard extends Component {
     }
 
     displayDetails(e) {
-        const value = e.target.getAttribute('value')
+        const value = e.target.name
         this.setState({
             activePage: PAGE.DETAILS,
             chosenOrg: this.state.user.organizations.filter(org => org.name === value)[0]
@@ -122,7 +122,7 @@ class Dashboard extends Component {
             } 
 
             if (this.state.activePage === PAGE.DETAILS) {
-                activePage = <OrganizationDetails {...this.state.chosenOrg} />
+                activePage = <OrganizationDetails {...this.state.chosenOrg} user={this.state.user.nick} />
             }
 
             return (
@@ -138,7 +138,7 @@ class Dashboard extends Component {
                             <main role="main" className="col-md-9 ml-sm-auto col-lg-10 px-4">
                                 <div className="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
                                     <h1 className="h2">Dashboard</h1>
-                                    <img src={this.state.user.avatarURL} className="user-avatar rounded-circle float-right" alt="user image" />
+                                    <img src={this.state.user.avatarURL} className="user-avatar rounded-circle float-right" alt="user avatarxx" />
                                 </div>
 
                                 {activePage}

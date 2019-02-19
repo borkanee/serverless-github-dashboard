@@ -10,6 +10,7 @@ async function main (event, context) {
     TableName: 'settings',
     Item: {
       user: data.user,
+      organization: data.org,
       settings: JSON.stringify(data.settings)
     }
   }
@@ -17,11 +18,18 @@ async function main (event, context) {
   try {
     await dynamoDB.put(params).promise()
     return {
-      statusCode: 201
+      statusCode: 201,
+      headers: {
+        'Access-Control-Allow-Origin': '*'
+      }
     }
   } catch (err) {
+    console.log(err)
     return {
-      statusCode: 500
+      statusCode: 500,
+      headers: {
+        'Access-Control-Allow-Origin': '*'
+      }
     }
   }
 }

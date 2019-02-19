@@ -9,8 +9,7 @@ async function main (event, context) {
     return {
       statusCode: 401,
       headers: {
-        'Access-Control-Allow-Origin': '*',
-        'Access-Control-Allow-Credentials': true
+        'Access-Control-Allow-Origin': '*'
       },
       body: JSON.stringify({ 'message': 'Unauthorized' })
     }
@@ -21,8 +20,7 @@ async function main (event, context) {
     return {
       statusCode: 200,
       headers: {
-        'Access-Control-Allow-Origin': '*',
-        'Access-Control-Allow-Credentials': true
+        'Access-Control-Allow-Origin': '*'
       },
       body: JSON.stringify(user)
     }

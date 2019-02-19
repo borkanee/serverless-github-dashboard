@@ -7,7 +7,7 @@ class OrganizationDetails extends Component {
       <React.Fragment>
         <h3 className='display-4'>{this.props.name}</h3>
 
-        <Settings />
+        <Settings org={this.props.name} user={this.props.user} />
       </React.Fragment>
     )
   }
