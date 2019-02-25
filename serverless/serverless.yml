@@ -58,6 +58,24 @@ functions:
           path: settings/{organization}/{user}
           method: GET
           cors: true
+  createWebhook:
+    handler: createWebhook.main
+    events:
+      - http:
+          path: webhooks
+          method: POST
+          cors: true
+  payload:
+    handler: payload.main
+    events:
+      - http:
+          path: payload
+          method: POST
+          cors: true        
+  connectHandler:
+    handler: handler.connectHandler
+    events:
+      - websocket: $connect
 
 resources:
   Resources:

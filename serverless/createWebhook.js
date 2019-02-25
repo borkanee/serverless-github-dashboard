@@ -1,7 +1,11 @@
 
 'use strict'
 
+const fetch = require('node-fetch')
+
 async function main (event, context) {
+  const data = JSON.parse(event.body)
+
   // Sets up config for WebHook
   const options = {
     'name': 'web',
@@ -17,18 +21,22 @@ async function main (event, context) {
       'repository_vulnerability_alert'
     ],
     'config': {
-      'url': 'http://localhost:3000/payload',
+      'url': 'https://t3bi6cl38c.execute-api.eu-north-1.amazonaws.com/dev/payload',
       'content_type': 'json'
 
     }
   }
 
   try {
-    await fetch(`https://api.github.com/orgs/${event.body.organization}/hooks?access_token=${event.body.token}`, {
+    let response = await fetch(`https://api.github.com/orgs/${data.organization}/hooks?access_token=${data.token}`, {
       method: 'POST',
       body: JSON.stringify(options),
       headers: { 'Content-Type': 'application/json' }
     })
+
+    response = await response.json()
+
+    console.log(response)
 
     return {
       statusCode: 200,
@@ -37,6 +45,7 @@ async function main (event, context) {
       }
     }
   } catch (err) {
+    console.log(err)
     return {
       statusCode: 500,
       headers: {

@@ -41,7 +41,7 @@ class Dashboard extends Component {
             activePage: PAGE.DASHBOARD,
             chosenOrg: {}
         })
-        
+
     }
 
     displayDetails(e) {
@@ -70,7 +70,8 @@ class Dashboard extends Component {
                     user: {
                         nick: user.login,
                         avatarURL: user.avatar_url,
-                        organizations: orgs
+                        organizations: orgs,
+                        token: token
                     }
                 })
 
@@ -119,10 +120,10 @@ class Dashboard extends Component {
                         )
                     })}
                 </div>
-            } 
+            }
 
             if (this.state.activePage === PAGE.DETAILS) {
-                activePage = <OrganizationDetails {...this.state.chosenOrg} user={this.state.user.nick} />
+                activePage = <OrganizationDetails {...this.state.chosenOrg} user={this.state.user.nick} token={this.state.user.token} />
             }
 
             return (
