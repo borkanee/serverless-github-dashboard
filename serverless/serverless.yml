@@ -73,9 +73,10 @@ functions:
           method: POST
           cors: true        
   connectHandler:
-    handler: handler.connectHandler
+    handler: socketHandler.main
     events:
       - websocket: $connect
+        cors: true
 
 resources:
   Resources:
