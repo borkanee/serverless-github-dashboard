@@ -6,6 +6,7 @@ import OrganizationDetails from './OrganizationDetails'
 import '../bootstrap-social.css'
 import qs from 'qs'
 import SockJS from 'sockjs-client'
+import { Socket } from 'dgram';
 
 const PAGE = {
     DASHBOARD: 0,
@@ -23,19 +24,25 @@ class Dashboard extends Component {
         let sessionToken = window.sessionStorage.getItem('token')
         let queryToken = qs.parse(window.location.search, { ignoreQueryPrefix: true }).access_token
 
-        const socket = new WebSocket('wss://7zzo0pjlob.execute-api.eu-north-1.amazonaws.com/dev');
-
-        socket.addEventListener('open', function (event) {
-            console.log('hej')
-        })
-
-
         if (sessionToken) {
             this.doLogin(sessionToken)
         }
         if (queryToken) {
             this.doLogin(queryToken)
         }
+    }
+
+    setupSocket() {
+        const socket = new WebSocket('wss://7zzo0pjlob.execute-api.eu-north-1.amazonaws.com/dev');
+
+        socket.addEventListener('open', function (event) {
+            console.log('hej')
+        })
+
+        socket.addEventListener('message', function (event) {
+            console.log('Message from server ', event.data)
+            console.log(event)
+        })
     }
 
     logout() {
@@ -82,7 +89,7 @@ class Dashboard extends Component {
                         token: token
                     }
                 })
-
+                this.setupSocket()
             }
         } catch (err) {
             console.log(err)

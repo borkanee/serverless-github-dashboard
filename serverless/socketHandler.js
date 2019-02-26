@@ -1,7 +1,7 @@
 'use strict'
 
-async function main(event, context) {
-  console.log(event)
+async function main (event, context) {
+  console.log(event.requestContext)
   if (event.requestContext.routeKey === '$connect') {
     console.log('NEW CONNECTION INCOMMING')
   }

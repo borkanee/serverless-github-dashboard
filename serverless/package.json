@@ -8,6 +8,7 @@
   "author": "Boris Grubesic",
   "license": "ISC",
   "dependencies": {
+    "aws-sdk": "^2.410.0",
     "node-fetch": "^2.3.0"
   }
 }
