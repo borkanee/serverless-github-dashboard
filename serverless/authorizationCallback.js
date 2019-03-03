@@ -3,6 +3,8 @@
 const fetch = require('node-fetch')
 
 module.exports.main = async (event, context) => {
+  console.log('hej', event)
+
   const tokenURL =
     `https://github.com/login/oauth/access_token?code=${event.queryStringParameters.code}&state=${process.env.GITHUB_API_STATE}&client_id=${process.env.GITHUB_CLIENT}&client_secret=${process.env.GITHUB_CLIENT_SECRET}`
 
@@ -26,7 +28,11 @@ module.exports.main = async (event, context) => {
     return {
       statusCode: 301,
       headers: {
-        Location: `http://localhost:3000/?access_token=${res.access_token}`
+        'Access-Control-Allow-Origin': 'http://1bf558e3.ngrok.io',
+        'Access-Control-Allow-Credential': true,
+        'Set-Cookie': `token=${res.access_token}; Max-Age=3600`,
+        'Location': `http://1bf558e3.ngrok.io/?access_token=${res.access_token}`
+
       }
     }
   } catch (err) {

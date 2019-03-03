@@ -19,7 +19,7 @@ provider:
         - "execute-api:ManageConnections"
       Resource:
         - "arn:aws:execute-api:*:*:**/@connections/*"
-        
+
   stage: dev
   region: eu-north-1
 
@@ -42,6 +42,7 @@ functions:
       - http:
           path: authCallback
           method: GET
+          cors: true
   validate:
     handler: getUser.main
     events:
@@ -76,7 +77,14 @@ functions:
       - http:
           path: payload
           method: POST
-          cors: true        
+          cors: true
+  testCookie:
+    handler: testCookie.main
+    events:
+      - http:
+          path: testCookie
+          method: GET
+          cors: true
   connectHandler:
     handler: socketHandler.main
     events:

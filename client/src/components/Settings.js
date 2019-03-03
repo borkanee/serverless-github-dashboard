@@ -17,8 +17,12 @@ class Settings extends Component {
   async componentDidMount() {
     // TODO: Fetch settings from API for current user and organization and change state. 
     try {
-      let res = await fetch(`https://t3bi6cl38c.execute-api.eu-north-1.amazonaws.com/dev/settings/${this.props.org}/${this.props.user}`)
+      let res = await fetch(`https://3vum3l32ja.execute-api.eu-north-1.amazonaws.com/dev/settings/${this.props.org}/${this.props.user}`)
       res = await res.json()
+
+      let test = await fetch('https://3vum3l32ja.execute-api.eu-north-1.amazonaws.com/dev/testCookie', {
+        credentials: 'include'
+      })
 
       this.setState({ settings: res })
     } catch (err) {
@@ -43,7 +47,7 @@ class Settings extends Component {
 
 
 
-        let res = await fetch(`https://t3bi6cl38c.execute-api.eu-north-1.amazonaws.com/dev/settings`, {
+        let res = await fetch(`https://3vum3l32ja.execute-api.eu-north-1.amazonaws.com/dev/settings`, {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json'
@@ -52,7 +56,7 @@ class Settings extends Component {
         })
 
 
-        let hookResponse = await fetch(`https://t3bi6cl38c.execute-api.eu-north-1.amazonaws.com/dev/webhooks`, {
+        let hookResponse = await fetch(`https://3vum3l32ja.execute-api.eu-north-1.amazonaws.com/dev/webhooks`, {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json'

@@ -33,7 +33,7 @@ class Dashboard extends Component {
     }
 
     setupSocket() {
-        const socket = new WebSocket('wss://7zzo0pjlob.execute-api.eu-north-1.amazonaws.com/dev');
+        const socket = new WebSocket('wss://hkv46okwog.execute-api.eu-north-1.amazonaws.com/dev');
 
         socket.addEventListener('open', function (event) {
             console.log('hej')
@@ -71,7 +71,7 @@ class Dashboard extends Component {
         this.setState({ isLoading: true })
 
         try {
-            let user = await fetch(`https://t3bi6cl38c.execute-api.eu-north-1.amazonaws.com/dev/getUser?access_token=${token}`)
+            let user = await fetch(`https://3vum3l32ja.execute-api.eu-north-1.amazonaws.com/dev/getUser?access_token=${token}`)
 
             if (user.status === 200) {
                 window.sessionStorage.setItem('token', token)
@@ -166,7 +166,7 @@ class Dashboard extends Component {
         } else {
             return (
                 <div className="text-center login-div">
-                    <a href="https://t3bi6cl38c.execute-api.eu-north-1.amazonaws.com/dev/auth" className="btn btn-github btn-lg active" role="button" aria-pressed="true">Login at Github</a>
+                    <a href="https://3vum3l32ja.execute-api.eu-north-1.amazonaws.com/dev/auth" className="btn btn-github btn-lg active" role="button" aria-pressed="true">Login at Github</a>
                 </div>
             )
         }

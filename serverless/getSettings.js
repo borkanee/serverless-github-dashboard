@@ -18,7 +18,8 @@ async function main (event, context) {
     return {
       statusCode: 200,
       headers: {
-        'Access-Control-Allow-Origin': '*'
+        'Access-Control-Allow-Origin': '*',
+        'Access-Control-Allow-Credential': true
       },
       body: data.Item.settings
     }
@@ -26,7 +27,8 @@ async function main (event, context) {
     return {
       statusCode: 500,
       headers: {
-        'Access-Control-Allow-Origin': '*'
+        'Access-Control-Allow-Origin': '*',
+        'Access-Control-Allow-Credential': true
       }
     }
   }
