@@ -1,6 +1,6 @@
 'use strict'
 
-const cookie = require('cookie');
+const cookie = require('cookie')
 
 async function main (event, context) {
   let cookies = cookie.parse(event.headers.Cookie || '')
@@ -11,7 +11,7 @@ async function main (event, context) {
     statusCode: 200,
     headers: {
       'Access-Control-Allow-Credentials': true,
-      'Access-Control-Allow-Origin': 'http://1bf558e3.ngrok.io'
+      'Access-Control-Allow-Origin': 'http://910e6fe7.ngrok.io'
     },
     body: JSON.stringify({ msg: 'test' })
   }

@@ -4,9 +4,6 @@ import Sidebar from './Sidebar'
 import Organization from './Organization'
 import OrganizationDetails from './OrganizationDetails'
 import '../bootstrap-social.css'
-import qs from 'qs'
-import SockJS from 'sockjs-client'
-import { Socket } from 'dgram';
 
 const PAGE = {
     DASHBOARD: 0,
@@ -21,15 +18,7 @@ class Dashboard extends Component {
     }
 
     componentDidMount() {
-        let sessionToken = window.sessionStorage.getItem('token')
-        let queryToken = qs.parse(window.location.search, { ignoreQueryPrefix: true }).access_token
-
-        if (sessionToken) {
-            this.doLogin(sessionToken)
-        }
-        if (queryToken) {
-            this.doLogin(queryToken)
-        }
+        this.doLogin()
     }
 
     setupSocket() {
@@ -46,9 +35,11 @@ class Dashboard extends Component {
     }
 
     logout() {
-        window.sessionStorage.removeItem('token')
-        this.setState({ user: {} })
-        window.location.href = '/'
+        this.setState({ 
+            user: {},
+            activePage: PAGE.DASHBOARD,
+            isAuthorized: false
+        })
     }
 
     displayDashboard(e) {
@@ -71,22 +62,28 @@ class Dashboard extends Component {
         this.setState({ isLoading: true })
 
         try {
-            let user = await fetch(`https://3vum3l32ja.execute-api.eu-north-1.amazonaws.com/dev/getUser?access_token=${token}`)
+            let user = await fetch('https://3vum3l32ja.execute-api.eu-north-1.amazonaws.com/dev/getUser', {
+                credentials: 'include'
+            })
+
+            if (user.status === 401) {
+                this.setState({ isLoading: false })
+                return
+            }
 
             if (user.status === 200) {
-                window.sessionStorage.setItem('token', token)
+                // window.sessionStorage.setItem('token', token)
                 user = await user.json()
 
-                let orgs = await this.getOrganizations()
+                console.log(user)
 
                 this.setState({
                     isLoading: false,
                     isAuthorized: true,
                     user: {
-                        nick: user.login,
-                        avatarURL: user.avatar_url,
-                        organizations: orgs,
-                        token: token
+                        nick: user.nick,
+                        avatarURL: user.avatarURL,
+                        organizations: user.organizations
                     }
                 })
                 this.setupSocket()
@@ -96,25 +93,6 @@ class Dashboard extends Component {
         }
 
 
-    }
-
-    async getOrganizations() {
-        try {
-            let orgs = await fetch(`https://api.github.com/user/orgs?access_token=${window.sessionStorage.getItem('token')}`)
-
-            orgs = await orgs.json()
-            return orgs.map(org => {
-                return {
-                    name: org.login,
-                    avatarURL: org.avatar_url,
-                    description: org.description,
-                    reposAPI: org.repos_url
-                }
-            })
-
-        } catch (err) {
-            console.log(err)
-        }
     }
 
     render() {

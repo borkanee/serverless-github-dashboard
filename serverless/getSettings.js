@@ -15,13 +15,23 @@ async function main (event, context) {
   try {
     const data = await dynamoDB.get(params).promise()
 
-    return {
-      statusCode: 200,
-      headers: {
-        'Access-Control-Allow-Origin': '*',
-        'Access-Control-Allow-Credential': true
-      },
-      body: data.Item.settings
+    if (data.Item) {
+      return {
+        statusCode: 200,
+        headers: {
+          'Access-Control-Allow-Origin': '*',
+          'Access-Control-Allow-Credential': true
+        },
+        body: data.Item.settings
+      }
+    } else {
+      return {
+        statusCode: 204,
+        headers: {
+          'Access-Control-Allow-Origin': '*',
+          'Access-Control-Allow-Credential': true
+        }
+      }
     }
   } catch (err) {
     return {

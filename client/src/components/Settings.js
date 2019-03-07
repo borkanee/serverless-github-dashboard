@@ -18,11 +18,11 @@ class Settings extends Component {
     // TODO: Fetch settings from API for current user and organization and change state. 
     try {
       let res = await fetch(`https://3vum3l32ja.execute-api.eu-north-1.amazonaws.com/dev/settings/${this.props.org}/${this.props.user}`)
-      res = await res.json()
+      if (res.status === 204) {
+        return
+      }
 
-      let test = await fetch('https://3vum3l32ja.execute-api.eu-north-1.amazonaws.com/dev/testCookie', {
-        credentials: 'include'
-      })
+      res = await res.json()
 
       this.setState({ settings: res })
     } catch (err) {
@@ -55,17 +55,18 @@ class Settings extends Component {
           body: jsonBody
         })
 
-
-        let hookResponse = await fetch(`https://3vum3l32ja.execute-api.eu-north-1.amazonaws.com/dev/webhooks`, {
+        let hookResponse = await fetch('https://3vum3l32ja.execute-api.eu-north-1.amazonaws.com/dev/webhooks', {
           method: 'POST',
+          credentials: 'include',
           headers: {
             'Content-Type': 'application/json'
           },
-          body: JSON.stringify({ 
-            token: this.props.token,
+          body: JSON.stringify({
             organization: this.props.org
-           })
+          })
         })
+
+        console.log(hookResponse)
 
       } catch (err) {
         console.log(err)
