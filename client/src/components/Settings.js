@@ -15,7 +15,11 @@ class Settings extends Component {
   }
 
   async componentDidMount() {
-    // TODO: Fetch settings from API for current user and organization and change state. 
+
+    if (window.sessionStorage.getItem(this.props.org)) {
+      return this.setState({ settings: JSON.parse(window.sessionStorage.getItem(this.props.org)) })
+    }
+
     try {
       let res = await fetch(`https://3vum3l32ja.execute-api.eu-north-1.amazonaws.com/dev/settings/${this.props.org}/${this.props.user}`)
       if (res.status === 204) {
@@ -25,6 +29,7 @@ class Settings extends Component {
       res = await res.json()
 
       this.setState({ settings: res })
+      window.sessionStorage.setItem(this.props.org, JSON.stringify(res))
     } catch (err) {
       console.log(err)
     }
@@ -65,6 +70,8 @@ class Settings extends Component {
             organization: this.props.org
           })
         })
+
+        window.sessionStorage.setItem(this.props.org, JSON.stringify(this.state.settings))
 
         console.log(hookResponse)
 

@@ -14,7 +14,17 @@ const PAGE = {
 class Dashboard extends Component {
     state = {
         user: {},
-        activePage: PAGE.DASHBOARD
+        activePage: PAGE.DASHBOARD,
+        settings: {
+            repos: false,
+            commits: false,
+            issueComments: false,
+            projects: false,
+            releases: false,
+            deployments: false,
+            forks: false,
+            securityAlerts: false
+        }
     }
 
     componentDidMount() {
@@ -35,11 +45,12 @@ class Dashboard extends Component {
     }
 
     logout() {
-        this.setState({ 
+        this.setState({
             user: {},
             activePage: PAGE.DASHBOARD,
             isAuthorized: false
         })
+        window.sessionStorage.clear()
     }
 
     displayDashboard(e) {
@@ -91,8 +102,6 @@ class Dashboard extends Component {
         } catch (err) {
             console.log(err)
         }
-
-
     }
 
     render() {
