@@ -3,14 +3,14 @@ import React, { Component } from 'react'
 class Settings extends Component {
   state = {
     settings: {
-      repos: false,
-      commits: false,
-      issueComments: false,
-      projects: false,
-      releases: false,
-      deployments: false,
-      forks: false,
-      securityAlerts: false
+      repository: false,
+      commit_comment: false,
+      issue_comment: false,
+      project: false,
+      release: false,
+      deployment: false,
+      fork: false,
+      repository_vulnerability_alert: false
     }
   }
 
@@ -50,8 +50,6 @@ class Settings extends Component {
           settings: this.state.settings
         })
 
-
-
         let res = await fetch(`https://3vum3l32ja.execute-api.eu-north-1.amazonaws.com/dev/settings`, {
           method: 'POST',
           headers: {
@@ -67,7 +65,8 @@ class Settings extends Component {
             'Content-Type': 'application/json'
           },
           body: JSON.stringify({
-            organization: this.props.org
+            organization: this.props.org,
+            settings: this.state.settings
           })
         })
 
@@ -95,28 +94,28 @@ class Settings extends Component {
                   <li className='list-group-item'>
                     Repositories
                     <label className='switch '>
-                      <input type='checkbox' checked={this.state.settings.repos} onChange={this.handleCheckboxChange} name='repos' className='success' />
+                      <input type='checkbox' checked={this.state.settings.repository} onChange={this.handleCheckboxChange} name='repository' className='success' />
                       <span className='slider round' />
                     </label>
                   </li>
                   <li className='list-group-item'>
                     Commits
                     <label className='switch '>
-                      <input type='checkbox' checked={this.state.settings.commits} onChange={this.handleCheckboxChange} name='commits' className='success' />
+                      <input type='checkbox' checked={this.state.settings.commit_comment} onChange={this.handleCheckboxChange} name='commit_comment' className='success' />
                       <span className='slider round' />
                     </label>
                   </li>
                   <li className='list-group-item'>
                     Issue comments
                     <label className='switch '>
-                      <input type='checkbox' checked={this.state.settings.issueComments} onChange={this.handleCheckboxChange} name='issueComments' className='success' />
+                      <input type='checkbox' checked={this.state.settings.issue_comment} onChange={this.handleCheckboxChange} name='issue_comment' className='success' />
                       <span className='slider round' />
                     </label>
                   </li>
                   <li className='list-group-item'>
                     Projects
                     <label className='switch '>
-                      <input type='checkbox' checked={this.state.settings.projects} onChange={this.handleCheckboxChange} name='projects' className='success' />
+                      <input type='checkbox' checked={this.state.settings.project} onChange={this.handleCheckboxChange} name='project' className='success' />
                       <span className='slider round' />
                     </label>
                   </li>
@@ -129,28 +128,28 @@ class Settings extends Component {
                   <li className='list-group-item'>
                     Releases
                     <label className='switch '>
-                      <input type='checkbox' checked={this.state.settings.releases} onChange={this.handleCheckboxChange} name='releases' className='success' />
+                      <input type='checkbox' checked={this.state.settings.release} onChange={this.handleCheckboxChange} name='release' className='success' />
                       <span className='slider round' />
                     </label>
                   </li>
                   <li className='list-group-item'>
                     Deployments
                     <label className='switch '>
-                      <input type='checkbox' checked={this.state.settings.deployments} onChange={this.handleCheckboxChange} name='deployments' className='success' />
+                      <input type='checkbox' checked={this.state.settings.deployment} onChange={this.handleCheckboxChange} name='deployment' className='success' />
                       <span className='slider round' />
                     </label>
                   </li>
                   <li className='list-group-item'>
                     Forks
                     <label className='switch '>
-                      <input type='checkbox' checked={this.state.settings.forks} onChange={this.handleCheckboxChange} name='forks' className='success' />
+                      <input type='checkbox' checked={this.state.settings.fork} onChange={this.handleCheckboxChange} name='fork' className='success' />
                       <span className='slider round' />
                     </label>
                   </li>
                   <li className='list-group-item'>
                     Security Alerts
                     <label className='switch '>
-                      <input type='checkbox' checked={this.state.settings.securityAlerts} onChange={this.handleCheckboxChange} name='securityAlerts' className='success' />
+                      <input type='checkbox' checked={this.state.settings.repository_vulnerability_alert} onChange={this.handleCheckboxChange} name='repository_vulnerability_alert' className='success' />
                       <span className='slider round' />
                     </label>
                   </li>

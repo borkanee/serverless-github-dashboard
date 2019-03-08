@@ -1,11 +1,12 @@
 'use strict'
 
 const AWS = require('aws-sdk')
+// const dynamoDB = new AWS.DynamoDB.DocumentClient()
 
 const sendMessageToClient = (payload) => new Promise((resolve, reject) => {
-  const apigatewaymanagementapi = new AWS.ApiGatewayManagementApi({ apiVersion: '2029', endpoint: 'https://7zzo0pjlob.execute-api.eu-north-1.amazonaws.com/dev' })
+  const apigatewaymanagementapi = new AWS.ApiGatewayManagementApi({ apiVersion: '2029', endpoint: 'https://hkv46okwog.execute-api.eu-north-1.amazonaws.com/dev' })
   apigatewaymanagementapi.postToConnection({
-    ConnectionId: 'Vt44OfWiEowCGPA=',
+    ConnectionId: 'WO5VzdqDAi0CFlg=',
     Data: JSON.stringify(payload)
   }, (err, data) => {
     if (err) {
@@ -18,7 +19,17 @@ const sendMessageToClient = (payload) => new Promise((resolve, reject) => {
 
 async function main (event, context) {
   let data = JSON.parse(event.body)
+  console.log(data)
 
+  /* const params = {
+    TableName: 'connectionsids',
+    Key: {
+      user: event.pathParameters.user
+    }
+  }
+
+  const connectionID = await dynamoDB.get(params).promise()
+*/
   try {
     let test = await sendMessageToClient(data)
 

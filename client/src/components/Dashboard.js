@@ -14,17 +14,7 @@ const PAGE = {
 class Dashboard extends Component {
     state = {
         user: {},
-        activePage: PAGE.DASHBOARD,
-        settings: {
-            repos: false,
-            commits: false,
-            issueComments: false,
-            projects: false,
-            releases: false,
-            deployments: false,
-            forks: false,
-            securityAlerts: false
-        }
+        activePage: PAGE.DASHBOARD
     }
 
     componentDidMount() {
@@ -35,7 +25,7 @@ class Dashboard extends Component {
         const socket = new WebSocket('wss://hkv46okwog.execute-api.eu-north-1.amazonaws.com/dev');
 
         socket.addEventListener('open', function (event) {
-            console.log('hej')
+            console.log('ÖPPEN SOCKET')
         })
 
         socket.addEventListener('message', function (event) {
@@ -85,8 +75,6 @@ class Dashboard extends Component {
             if (user.status === 200) {
                 // window.sessionStorage.setItem('token', token)
                 user = await user.json()
-
-                console.log(user)
 
                 this.setState({
                     isLoading: false,
