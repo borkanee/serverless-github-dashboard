@@ -35,19 +35,35 @@ async function main (event, context) {
 
     let orgs = await fetch(`https://api.github.com/user/orgs?access_token=${token}`)
     orgs = await orgs.json()
-    orgs = orgs.map(org => {
+
+    let promises = orgs.map(async org => {
+      let repos = await fetch(org.repos_url)
+      repos = await repos.json()
+
+      repos = repos.map(repo => {
+        return {
+          name: repo.name,
+          id: repo.id,
+          private: repo.private,
+          URL: repo.html_url,
+          description: repo.description
+        }
+      })
+
       return {
         name: org.login,
         avatarURL: org.avatar_url,
         description: org.description,
-        reposAPI: org.repos_url
+        repos
       }
     })
+
+    let organizations = await Promise.all(promises)
 
     user = {
       nick: user.login,
       avatarURL: user.avatar_url,
-      organizations: orgs
+      organizations
     }
 
     return {

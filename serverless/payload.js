@@ -6,7 +6,7 @@ const AWS = require('aws-sdk')
 const sendMessageToClient = (payload) => new Promise((resolve, reject) => {
   const apigatewaymanagementapi = new AWS.ApiGatewayManagementApi({ apiVersion: '2029', endpoint: 'https://hkv46okwog.execute-api.eu-north-1.amazonaws.com/dev' })
   apigatewaymanagementapi.postToConnection({
-    ConnectionId: 'WO5VzdqDAi0CFlg=',
+    ConnectionId: 'WYAXZfJcgi0CJMg=',
     Data: JSON.stringify(payload)
   }, (err, data) => {
     if (err) {

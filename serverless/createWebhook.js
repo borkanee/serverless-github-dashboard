@@ -19,11 +19,24 @@ function createEventsOptions (settings) {
   return eventsArray
 }
 
-async function addHook (data, token, existingHook) {
+async function deleteHook (org, id, token) {
+  let response = await fetch(`https://api.github.com/orgs/${org}/hooks/${id}?access_token=${token}`, {
+    method: 'DELETE'
+  })
+  return {
+    statusCode: response.status,
+    headers: {
+      'Access-Control-Allow-Credentials': true,
+      'Access-Control-Allow-Origin': 'http://910e6fe7.ngrok.io'
+    }
+  }
+}
+
+async function configureHook (data, token, existingHook) {
   const events = createEventsOptions(data.settings)
+
   let url, requestMethod
   let fetchOptions = {
-    'name': 'web',
     'events': events,
     'config': {
       'url': 'https://3vum3l32ja.execute-api.eu-north-1.amazonaws.com/dev/payload',
@@ -32,12 +45,15 @@ async function addHook (data, token, existingHook) {
   }
 
   if (existingHook) {
+    if (events.length === 0) {
+      return deleteHook(data.organization, existingHook[0].id, token)
+    }
     url = `https://api.github.com/orgs/${data.organization}/hooks/${existingHook[0].id}?access_token=${token}`
     requestMethod = 'PATCH'
-    delete fetchOptions.name
   } else {
     url = `https://api.github.com/orgs/${data.organization}/hooks?access_token=${token}`
     requestMethod = 'POST'
+    fetchOptions.name = 'web'
   }
 
   let response = await fetch(url, {
@@ -72,7 +88,6 @@ module.exports.main = async (event, context) => {
   try {
     let token = cookie.parse(event.headers.Cookie).token || ''
     let existingHook = await getExistingHook(data.organization, token)
-    console.log(existingHook.status)
 
     if (existingHook.status !== 200) {
       return {
@@ -85,13 +100,13 @@ module.exports.main = async (event, context) => {
       }
     }
 
+    existingHook = await existingHook.json()
+
     if (existingHook.length !== 0) {
-      existingHook = await existingHook.json()
-      console.log(existingHook)
-      return addHook(data, token, existingHook)
+      return configureHook(data, token, existingHook)
     }
     // Sets up config for WebHook IF NOT existing...
-    return addHook(data, token)
+    return configureHook(data, token)
   } catch (err) {
     console.log(err)
     return {
