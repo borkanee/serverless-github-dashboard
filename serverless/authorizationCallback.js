@@ -28,10 +28,10 @@ module.exports.main = async (event, context) => {
     return {
       statusCode: 301,
       headers: {
-        'Access-Control-Allow-Origin': 'http://1bf558e3.ngrok.io',
+        'Access-Control-Allow-Origin': 'https://910e6fe7.ngrok.io',
         'Access-Control-Allow-Credential': true,
         'Set-Cookie': `token=${res.access_token}; Max-Age=3600; HttpOnly;`,
-        'Location': 'http://910e6fe7.ngrok.io/'
+        'Location': 'https://910e6fe7.ngrok.io'
 
       }
     }

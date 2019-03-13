@@ -6,7 +6,7 @@ const AWS = require('aws-sdk')
 const sendMessageToClient = (payload) => new Promise((resolve, reject) => {
   const apigatewaymanagementapi = new AWS.ApiGatewayManagementApi({ apiVersion: '2029', endpoint: 'https://hkv46okwog.execute-api.eu-north-1.amazonaws.com/dev' })
   apigatewaymanagementapi.postToConnection({
-    ConnectionId: 'WYAXZfJcgi0CJMg=',
+    ConnectionId: 'WYg-nfCVAi0CHUQ=',
     Data: JSON.stringify(payload)
   }, (err, data) => {
     if (err) {
@@ -31,9 +31,9 @@ async function main (event, context) {
   const connectionID = await dynamoDB.get(params).promise()
 */
   try {
-    let test = await sendMessageToClient(data)
+    // let test = await sendMessageToClient(data)
 
-    console.log(test)
+    // console.log(test)
 
     return {
       statusCode: 200,

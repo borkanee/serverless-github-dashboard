@@ -77,7 +77,7 @@ functions:
       - http:
           path: webhooks
           method: OPTIONS
-          cors: true        
+          cors: true
   payload:
     handler: payload.main
     events:
@@ -85,18 +85,17 @@ functions:
           path: payload
           method: POST
           cors: true
-  testCookie:
-    handler: testCookie.main
-    events:
-      - http:
-          path: testCookie
-          method: GET
-          cors: true
   connectHandler:
-    handler: socketHandler.main
+    handler: connectHandler.main
     events:
       - websocket: $connect
         cors: true
+  disconnectHandler:
+    handler: disconnectHandler.main
+    events:
+      - websocket: $disconnect
+        cors: true
+  
 
 resources:
   Resources:
@@ -118,3 +117,17 @@ resources:
           ReadCapacityUnits: 1
           WriteCapacityUnits: 1
         TableName: "settings"
+    ConnectionsDynamoDbTable:
+      Type: "AWS::DynamoDB::Table"
+      DeletionPolicy: Retain
+      Properties:
+        AttributeDefinitions:
+          - AttributeName: connectionID
+            AttributeType: S
+        KeySchema:
+          - AttributeName: connectionID
+            KeyType: HASH
+        ProvisionedThroughput:
+          ReadCapacityUnits: 1
+          WriteCapacityUnits: 1
+        TableName: "connections"

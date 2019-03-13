@@ -6,15 +6,20 @@ class OrganizationDetails extends Component {
   render () {
     return (
       <React.Fragment>
-        <h3 className='display-4'>{this.props.name}</h3>
+        <h1 className='display-2 text-center'>{this.props.name}</h1>
 
-        <Settings org={this.props.name} user={this.props.user} />
+        {this.props.isAdmin && (
+          <Settings org={this.props.name} user={this.props.user} />)
+        }
 
-        {this.props.repos.map(repo => {
-          return (
-            <Repo key={repo.name} {...repo} />
-          )
-        })}
+        <h1 className='display-4 text-center'>Repos</h1>
+        <div className='row'>
+          {this.props.repos.map(repo => {
+            return (
+              <Repo key={repo.name} {...repo} />
+            )
+          })}
+        </div>
 
       </React.Fragment>
     )

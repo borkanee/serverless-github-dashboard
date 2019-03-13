@@ -21,7 +21,7 @@ class Settings extends Component {
     }
 
     try {
-      let res = await fetch(`https://3vum3l32ja.execute-api.eu-north-1.amazonaws.com/dev/settings/${this.props.org}/${this.props.user}`)
+      let res = await fetch(`https://7vmkz7kzv2.execute-api.eu-north-1.amazonaws.com/dev/settings/${this.props.org}/${this.props.user}`)
       if (res.status === 204) {
         return
       }
@@ -50,7 +50,7 @@ class Settings extends Component {
           settings: this.state.settings
         })
 
-        let res = await fetch(`https://3vum3l32ja.execute-api.eu-north-1.amazonaws.com/dev/settings`, {
+        let res = await fetch(`https://7vmkz7kzv2.execute-api.eu-north-1.amazonaws.com/dev/settings`, {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json'
@@ -58,21 +58,9 @@ class Settings extends Component {
           body: jsonBody
         })
 
-        let hookResponse = await fetch('https://3vum3l32ja.execute-api.eu-north-1.amazonaws.com/dev/webhooks', {
-          method: 'POST',
-          credentials: 'include',
-          headers: {
-            'Content-Type': 'application/json'
-          },
-          body: JSON.stringify({
-            organization: this.props.org,
-            settings: this.state.settings
-          })
-        })
+        console.log(res)
 
         window.sessionStorage.setItem(this.props.org, JSON.stringify(this.state.settings))
-
-        console.log(hookResponse)
 
       } catch (err) {
         console.log(err)

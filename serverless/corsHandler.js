@@ -6,7 +6,7 @@ async function main (event, context) {
     statusCode: 200,
     headers: {
       'Access-Control-Allow-Credentials': true,
-      'Access-Control-Allow-Origin': 'http://910e6fe7.ngrok.io',
+      'Access-Control-Allow-Origin': 'https://910e6fe7.ngrok.io',
       'Access-Control-Allow-Headers': 'Content-Type'
     }
   }

@@ -21,16 +21,44 @@ class Dashboard extends Component {
         this.doLogin()
     }
 
-    setupSocket() {
-        const socket = new WebSocket('wss://hkv46okwog.execute-api.eu-north-1.amazonaws.com/dev');
+    componentWillUnmount() {
+        this.state.socket.close()
+    }
 
-        socket.addEventListener('open', function (event) {
-            console.log('ÖPPEN SOCKET')
+    setupSocket() {
+        this.setState({
+            socket: new WebSocket('wss://08l36ykm1d.execute-api.eu-north-1.amazonaws.com/dev?user=' + this.state.user.nick)
         })
 
-        socket.addEventListener('message', function (event) {
+        this.state.socket.addEventListener('open', function (event) {
+            console.log('ÖPPEN SOCKET')
+            console.log(event)
+        })
+
+        this.state.socket.addEventListener('message', function (event) {
             console.log('Message from server ', event.data)
         })
+    }
+
+    async setupWebhooks() {
+        for (let i = 0; i < this.state.user.organizations.length; i++) {
+            if (this.state.user.organizations[i].isAdmin && !this.state.user.organizations[i].hasHook) {
+                try {
+                    let hookResponse = await fetch('https://7vmkz7kzv2.execute-api.eu-north-1.amazonaws.com/dev/webhooks', {
+                        method: 'POST',
+                        credentials: 'include',
+                        headers: {
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify({
+                            organization: this.state.user.organizations[i].name
+                        })
+                    })
+                } catch (err) {
+                    console.log(err)
+                }
+            }
+        }
     }
 
     logout() {
@@ -40,6 +68,7 @@ class Dashboard extends Component {
             isAuthorized: false
         })
         window.sessionStorage.clear()
+        this.state.socket.close()
     }
 
     displayDashboard(e) {
@@ -62,7 +91,7 @@ class Dashboard extends Component {
         this.setState({ isLoading: true })
 
         try {
-            let user = await fetch('https://3vum3l32ja.execute-api.eu-north-1.amazonaws.com/dev/getUser', {
+            let user = await fetch('https://7vmkz7kzv2.execute-api.eu-north-1.amazonaws.com/dev/getUser', {
                 credentials: 'include'
             })
 
@@ -85,6 +114,7 @@ class Dashboard extends Component {
                     }
                 })
                 this.setupSocket()
+                this.setupWebhooks()
             }
         } catch (err) {
             console.log(err)
@@ -140,7 +170,7 @@ class Dashboard extends Component {
         } else {
             return (
                 <div className="text-center login-div">
-                    <a href="https://3vum3l32ja.execute-api.eu-north-1.amazonaws.com/dev/auth" className="btn btn-github btn-lg active" role="button" aria-pressed="true">Login at Github</a>
+                    <a href="https://7vmkz7kzv2.execute-api.eu-north-1.amazonaws.com/dev/auth" className="btn btn-github btn-lg active" role="button" aria-pressed="true">Login at Github</a>
                 </div>
             )
         }
