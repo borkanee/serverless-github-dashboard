@@ -9,7 +9,7 @@ async function main (event, context) {
   let connectionID = event.requestContext.connectionId
 
   let params = {
-    TableName: 'connections',
+    TableName: 'socketConnections',
     Key: {
       connectionID
     }

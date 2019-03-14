@@ -64,6 +64,13 @@ functions:
           path: settings/{organization}/{user}
           method: GET
           cors: true
+  registerWorker:
+    handler: workerHandler.main
+    events:
+      - http:
+          path: register
+          method: POST
+          cors: true        
   createWebhook:
     handler: createWebhook.main
     events:
@@ -99,7 +106,7 @@ functions:
 
 resources:
   Resources:
-    UserSettingsDynamoDbTable:
+    SettingsDynamoDbTable:
       Type: "AWS::DynamoDB::Table"
       DeletionPolicy: Retain
       Properties:
@@ -109,15 +116,15 @@ resources:
           - AttributeName: organization
             AttributeType: S
         KeySchema:
-          - AttributeName: user
-            KeyType: HASH
           - AttributeName: organization
+            KeyType: HASH
+          - AttributeName: user
             KeyType: RANGE
         ProvisionedThroughput:
           ReadCapacityUnits: 1
           WriteCapacityUnits: 1
-        TableName: "settings"
-    ConnectionsDynamoDbTable:
+        TableName: "userSettings"
+    SocketConnectionsDynamoDbTable:
       Type: "AWS::DynamoDB::Table"
       DeletionPolicy: Retain
       Properties:
@@ -130,4 +137,18 @@ resources:
         ProvisionedThroughput:
           ReadCapacityUnits: 1
           WriteCapacityUnits: 1
-        TableName: "connections"
+        TableName: "socketConnections"
+    ServiceWorkersDynamoDbTable:
+      Type: "AWS::DynamoDB::Table"
+      DeletionPolicy: Retain
+      Properties:
+        AttributeDefinitions:
+          - AttributeName: user
+            AttributeType: S
+        KeySchema:
+          - AttributeName: user
+            KeyType: HASH
+        ProvisionedThroughput:
+          ReadCapacityUnits: 1
+          WriteCapacityUnits: 1
+        TableName: "serviceWorkers"

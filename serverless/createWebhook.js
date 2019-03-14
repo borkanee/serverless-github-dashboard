@@ -5,7 +5,7 @@ const fetch = require('node-fetch')
 const cookie = require('cookie')
 
 async function configureHook (data, token) {
-  const events = ['repository', 'commit_comment', 'issue_comment', 'project', 'release', 'deployment', 'fork', 'repository_vulnerability_alert']
+  const events = ['repository', 'push', 'issues', 'project', 'release', 'deployment', 'fork', 'repository_vulnerability_alert']
 
   let fetchOptions = {
     'name': 'web',

@@ -5,6 +5,8 @@ import Organization from './Organization'
 import OrganizationDetails from './OrganizationDetails'
 import '../bootstrap-social.css'
 
+const publicVapidKey = 'BGqqZm74jsX141bCEXum-EePHgPFtTCPdeptiUR7KLQDKr_VfGc6fAu9wTZ9lvD8PyMcsaMqdEFiNvftmbmtZ7o'
+
 const PAGE = {
     DASHBOARD: 0,
     DETAILS: 1
@@ -19,6 +21,7 @@ class Dashboard extends Component {
 
     componentDidMount() {
         this.doLogin()
+        console.log(process.env)
     }
 
     componentWillUnmount() {
@@ -115,6 +118,9 @@ class Dashboard extends Component {
                 })
                 this.setupSocket()
                 this.setupWebhooks()
+                if ('serviceWorker' in navigator) {
+                    send(user.nick).catch(err => console.log(err))
+                }
             }
         } catch (err) {
             console.log(err)
@@ -178,3 +184,47 @@ class Dashboard extends Component {
 }
 
 export default Dashboard
+
+async function send(user) {
+    console.log('Reg service worker...')
+    const register = await navigator.serviceWorker.register('serviceWorker.js', {
+        scope: '/'
+    })
+    console.log('Registered')
+    console.log(register)
+
+    console.log('registering push...')
+    const subscription = await register.pushManager.subscribe({
+        userVisibleOnly: true,
+        applicationServerKey: urlBase64ToUint8Array(publicVapidKey)
+    })
+    console.log('Push registered')
+
+    console.log('sending push')
+    await fetch('https://7vmkz7kzv2.execute-api.eu-north-1.amazonaws.com/dev/register', {
+        method: 'POST',
+        body: JSON.stringify({
+            subscription,
+            user
+        }),
+        headers: {
+            'content-type': 'application/json'
+        }
+    })
+    console.log('push sent')
+}
+
+function urlBase64ToUint8Array(base64String) {
+    const padding = '='.repeat((4 - base64String.length % 4) % 4)
+    const base64 = (base64String + padding)
+        .replace(/\-/g, '+')
+        .replace(/_/g, '/')
+
+    const rawData = window.atob(base64)
+    const outputArray = new Uint8Array(rawData.length)
+
+    for (let i = 0; i < rawData.length; ++i) {
+        outputArray[i] = rawData.charCodeAt(i)
+    }
+    return outputArray
+}

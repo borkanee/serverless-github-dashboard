@@ -1,17 +1,17 @@
 'use strict'
 
+const webPush = require('web-push')
 const AWS = require('aws-sdk')
 const dynamoDB = new AWS.DynamoDB.DocumentClient()
 
 async function main (event, context) {
-  const data = JSON.parse(event.body)
+  let data = JSON.parse(event.body)
 
   const params = {
-    TableName: 'userSettings',
+    TableName: 'serviceWorkers',
     Item: {
       user: data.user,
-      organization: data.org,
-      settings: JSON.stringify(data.settings)
+      worker: JSON.stringify(data.subscription)
     }
   }
 

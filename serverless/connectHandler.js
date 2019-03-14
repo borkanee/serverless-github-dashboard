@@ -15,10 +15,10 @@ async function main (event, context) {
     let connectionID = event.requestContext.connectionId
 
     const params = {
-      TableName: 'connections',
+      TableName: 'socketConnections',
       Item: {
-        connectionID,
-        user
+        user,
+        connectionID
       }
     }
 

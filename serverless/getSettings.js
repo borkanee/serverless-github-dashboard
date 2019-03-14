@@ -5,7 +5,7 @@ const dynamoDB = new AWS.DynamoDB.DocumentClient()
 
 async function main (event, context) {
   const params = {
-    TableName: 'settings',
+    TableName: 'userSettings',
     Key: {
       user: event.pathParameters.user,
       organization: event.pathParameters.organization

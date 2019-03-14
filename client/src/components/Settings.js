@@ -4,8 +4,8 @@ class Settings extends Component {
   state = {
     settings: {
       repository: false,
-      commit_comment: false,
-      issue_comment: false,
+      push: false,
+      issues: false,
       project: false,
       release: false,
       deployment: false,
@@ -87,16 +87,16 @@ class Settings extends Component {
                     </label>
                   </li>
                   <li className='list-group-item'>
-                    Commits
+                    Push
                     <label className='switch '>
-                      <input type='checkbox' checked={this.state.settings.commit_comment} onChange={this.handleCheckboxChange} name='commit_comment' className='success' />
+                      <input type='checkbox' checked={this.state.settings.push} onChange={this.handleCheckboxChange} name='push' className='success' />
                       <span className='slider round' />
                     </label>
                   </li>
                   <li className='list-group-item'>
-                    Issue comments
+                    Issues
                     <label className='switch '>
-                      <input type='checkbox' checked={this.state.settings.issue_comment} onChange={this.handleCheckboxChange} name='issue_comment' className='success' />
+                      <input type='checkbox' checked={this.state.settings.issues} onChange={this.handleCheckboxChange} name='issues' className='success' />
                       <span className='slider round' />
                     </label>
                   </li>
