@@ -21,7 +21,7 @@ class Settings extends Component {
     }
 
     try {
-      let res = await fetch(`https://7vmkz7kzv2.execute-api.eu-north-1.amazonaws.com/dev/settings/${this.props.org}/${this.props.user}`)
+      let res = await fetch(`https://v8ah3e45f1.execute-api.eu-north-1.amazonaws.com/dev/settings/${this.props.user}/${this.props.org}`)
       if (res.status === 204) {
         return
       }
@@ -50,7 +50,7 @@ class Settings extends Component {
           settings: this.state.settings
         })
 
-        let res = await fetch(`https://7vmkz7kzv2.execute-api.eu-north-1.amazonaws.com/dev/settings`, {
+        let res = await fetch(`https://v8ah3e45f1.execute-api.eu-north-1.amazonaws.com/dev/settings`, {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json'

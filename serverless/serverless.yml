@@ -61,9 +61,16 @@ functions:
     handler: getSettings.main
     events:
       - http:
-          path: settings/{organization}/{user}
+          path: settings/{user}/{organization}
           method: GET
           cors: true
+  deleteNotifications:
+    handler: deleteNotifications.main
+    events:
+      - http:
+          path: notifications/{user}
+          method: DELETE
+          cors: true        
   registerWorker:
     handler: workerHandler.main
     events:
@@ -85,6 +92,10 @@ functions:
           path: webhooks
           method: OPTIONS
           cors: true
+      - http:
+          path: notifications/{user}
+          method: OPTIONS
+          cors: true    
   payload:
     handler: payload.main
     events:
@@ -152,3 +163,21 @@ resources:
           ReadCapacityUnits: 1
           WriteCapacityUnits: 1
         TableName: "serviceWorkers"
+    NotificationsDynamoDbTable:
+      Type: "AWS::DynamoDB::Table"
+      DeletionPolicy: Retain
+      Properties:
+        AttributeDefinitions:
+          - AttributeName: user
+            AttributeType: S
+          - AttributeName: notification
+            AttributeType: S
+        KeySchema:
+          - AttributeName: user
+            KeyType: HASH
+          - AttributeName: notification
+            KeyType: RANGE
+        ProvisionedThroughput:
+          ReadCapacityUnits: 1
+          WriteCapacityUnits: 1
+        TableName: "notifications"

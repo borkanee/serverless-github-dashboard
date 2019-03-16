@@ -2,6 +2,7 @@ import React, { Component } from 'react'
 import Navbar from './Navbar'
 import Sidebar from './Sidebar'
 import Organization from './Organization'
+import Notifications from './Notifications'
 import OrganizationDetails from './OrganizationDetails'
 import '../bootstrap-social.css'
 
@@ -9,37 +10,54 @@ const publicVapidKey = 'BGqqZm74jsX141bCEXum-EePHgPFtTCPdeptiUR7KLQDKr_VfGc6fAu9
 
 const PAGE = {
     DASHBOARD: 0,
-    DETAILS: 1
+    DETAILS: 1,
+    NOTIFICATIONS: 2
 }
 
 
 class Dashboard extends Component {
     state = {
         user: {},
-        activePage: PAGE.DASHBOARD
+        activePage: PAGE.DASHBOARD,
+        notifications: [],
+        notificationCounter: 0
     }
 
-    componentDidMount() {
-        this.doLogin()
-        console.log(process.env)
+    async componentDidMount() {
+        await this.doLogin()
     }
 
-    componentWillUnmount() {
+    async componentWillUnmount() {
         this.state.socket.close()
+    }
+
+    async removeNotifications() {
+        try {
+            await fetch('https://v8ah3e45f1.execute-api.eu-north-1.amazonaws.com/dev/notifications/' + this.state.user.nick, {
+                method: 'DELETE',
+                credentials: 'include'
+            })
+        } catch (err) {
+            console.log(err)
+        }
     }
 
     setupSocket() {
         this.setState({
-            socket: new WebSocket('wss://08l36ykm1d.execute-api.eu-north-1.amazonaws.com/dev?user=' + this.state.user.nick)
+            socket: new WebSocket('wss://7v320l37ab.execute-api.eu-north-1.amazonaws.com/dev?user=' + this.state.user.nick)
         })
 
-        this.state.socket.addEventListener('open', function (event) {
+        this.state.socket.addEventListener('open', event => {
             console.log('ÖPPEN SOCKET')
-            console.log(event)
         })
 
-        this.state.socket.addEventListener('message', function (event) {
+        this.state.socket.addEventListener('message', event => {
             console.log('Message from server ', event.data)
+            let data = JSON.parse(event.data)
+            this.setState({
+                notificationCounter: this.state.notificationCounter + 1,
+                notifications: [...this.state.notifications, data].reverse()
+            })
         })
     }
 
@@ -47,7 +65,7 @@ class Dashboard extends Component {
         for (let i = 0; i < this.state.user.organizations.length; i++) {
             if (this.state.user.organizations[i].isAdmin && !this.state.user.organizations[i].hasHook) {
                 try {
-                    let hookResponse = await fetch('https://7vmkz7kzv2.execute-api.eu-north-1.amazonaws.com/dev/webhooks', {
+                    let hookResponse = await fetch('https://v8ah3e45f1.execute-api.eu-north-1.amazonaws.com/dev/webhooks', {
                         method: 'POST',
                         credentials: 'include',
                         headers: {
@@ -74,12 +92,29 @@ class Dashboard extends Component {
         this.state.socket.close()
     }
 
+    resetCounter() {
+        let notifications = [...this.state.notifications]
+        for (let i = 0; i < notifications.length; i++) {
+            notifications[i].unseen = false
+        }
+        this.setState({
+            notifications,
+            notificationCounter: 0
+        })
+        this.removeNotifications()
+    }
+
     displayDashboard(e) {
         this.setState({
             activePage: PAGE.DASHBOARD,
             chosenOrg: {}
         })
+    }
 
+    displayNotifications() {
+        this.setState({
+            activePage: PAGE.NOTIFICATIONS
+        })
     }
 
     displayDetails(e) {
@@ -94,7 +129,7 @@ class Dashboard extends Component {
         this.setState({ isLoading: true })
 
         try {
-            let user = await fetch('https://7vmkz7kzv2.execute-api.eu-north-1.amazonaws.com/dev/getUser', {
+            let user = await fetch('https://v8ah3e45f1.execute-api.eu-north-1.amazonaws.com/dev/getUser', {
                 credentials: 'include'
             })
 
@@ -106,6 +141,7 @@ class Dashboard extends Component {
             if (user.status === 200) {
                 // window.sessionStorage.setItem('token', token)
                 user = await user.json()
+                console.log(user)
 
                 this.setState({
                     isLoading: false,
@@ -114,12 +150,15 @@ class Dashboard extends Component {
                         nick: user.nick,
                         avatarURL: user.avatarURL,
                         organizations: user.organizations
-                    }
+                    },
+                    notificationCounter: user.notifications.length,
+                    notifications: user.notifications
                 })
-                this.setupSocket()
-                this.setupWebhooks()
+                await this.setupSocket()
+                await this.setupWebhooks()
+
                 if ('serviceWorker' in navigator) {
-                    send(user.nick).catch(err => console.log(err))
+                    send(user.nick)
                 }
             }
         } catch (err) {
@@ -138,7 +177,7 @@ class Dashboard extends Component {
         else if (this.state.isAuthorized) {
             let activePage
             if (this.state.activePage === PAGE.DASHBOARD) {
-                activePage = <div className="card-deck">
+                activePage = <div className="card-columns">
                     {this.state.user.organizations.map(org => {
                         return (
                             <Organization key={org.name} {...org} displayDetails={this.displayDetails.bind(this)} />
@@ -151,6 +190,10 @@ class Dashboard extends Component {
                 activePage = <OrganizationDetails {...this.state.chosenOrg} user={this.state.user.nick} token={this.state.user.token} />
             }
 
+            if (this.state.activePage === PAGE.NOTIFICATIONS) {
+                activePage = <Notifications notifications={this.state.notifications} resetCounter={this.resetCounter.bind(this)} />
+            }
+
             return (
                 <React.Fragment>
                     <Navbar user={this.state.user.nick} logout={this.logout.bind(this)} />
@@ -160,6 +203,8 @@ class Dashboard extends Component {
                             <Sidebar
                                 active={this.state.activePage}
                                 displayDashboard={this.displayDashboard.bind(this)}
+                                displayNotifications={this.displayNotifications.bind(this)}
+                                notificationCounter={this.state.notificationCounter}
                             />
                             <main role="main" className="col-md-9 ml-sm-auto col-lg-10 px-4">
                                 <div className="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
@@ -176,7 +221,7 @@ class Dashboard extends Component {
         } else {
             return (
                 <div className="text-center login-div">
-                    <a href="https://7vmkz7kzv2.execute-api.eu-north-1.amazonaws.com/dev/auth" className="btn btn-github btn-lg active" role="button" aria-pressed="true">Login at Github</a>
+                    <a href='https://v8ah3e45f1.execute-api.eu-north-1.amazonaws.com/dev/auth' className="btn btn-github btn-lg active" role="button" aria-pressed="true">Login at Github</a>
                 </div>
             )
         }
@@ -186,22 +231,18 @@ class Dashboard extends Component {
 export default Dashboard
 
 async function send(user) {
-    console.log('Reg service worker...')
     const register = await navigator.serviceWorker.register('serviceWorker.js', {
         scope: '/'
     })
-    console.log('Registered')
-    console.log(register)
 
-    console.log('registering push...')
+    await navigator.serviceWorker.ready
+
     const subscription = await register.pushManager.subscribe({
         userVisibleOnly: true,
         applicationServerKey: urlBase64ToUint8Array(publicVapidKey)
     })
-    console.log('Push registered')
 
-    console.log('sending push')
-    await fetch('https://7vmkz7kzv2.execute-api.eu-north-1.amazonaws.com/dev/register', {
+    await fetch('https://v8ah3e45f1.execute-api.eu-north-1.amazonaws.com/dev/register', {
         method: 'POST',
         body: JSON.stringify({
             subscription,
@@ -211,7 +252,6 @@ async function send(user) {
             'content-type': 'application/json'
         }
     })
-    console.log('push sent')
 }
 
 function urlBase64ToUint8Array(base64String) {

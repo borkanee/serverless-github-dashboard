@@ -1,6 +1,12 @@
 
 import React, { Component } from 'react'
 
+const PAGE = {
+  DASHBOARD: 0,
+  DETAILS: 1,
+  NOTIFICATIONS: 2
+}
+
 class Sidebar extends Component {
   render () {
     return (
@@ -8,9 +14,15 @@ class Sidebar extends Component {
         <div className='sidebar-sticky'>
           <ul className='nav flex-column'>
             <li className='nav-item'>
-              <a className={(this.props.active === 0) ? 'nav-link active' : 'nav-link'} onClick={this.props.displayDashboard} href='#'>
+              <a className={(this.props.active === PAGE.DASHBOARD) ? 'nav-link active' : 'nav-link'} onClick={this.props.displayDashboard} href='#'>
                 <span data-feather='home' />
-                Dashboard <span className='sr-only'>(current)</span>
+                Dashboard
+              </a>
+            </li>
+            <li className='nav-item'>
+              <a className={(this.props.active === PAGE.NOTIFICATIONS) ? 'nav-link active' : 'nav-link'} onClick={this.props.displayNotifications} href='#'>
+                <span data-feather='home' />
+                Notifications <span className='badge badge-light'>{this.props.notificationCounter}</span>
               </a>
             </li>
           </ul>

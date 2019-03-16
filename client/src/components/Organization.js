@@ -4,7 +4,7 @@ class Organization extends Component {
   render () {
     return (
       <React.Fragment>
-        <div className='card' style={{ width: '18rem' }}>
+        <div className='card' >
           <img className='card-img-top' alt='organization avatar' src={this.props.avatarURL} />
           <div className='card-body d-flex flex-column'>
             <h5 className='card-title text-center'>{this.props.name}</h5>

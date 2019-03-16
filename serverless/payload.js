@@ -10,10 +10,10 @@ const privateVapidKey = 'HNWDlUbLUwtPU1gh_4WcUQo5zRdJZ_hLDCrhymeeJV0'
 webPush.setVapidDetails('mailto: grubesic.boris@gmail.com', publicVapidKey, privateVapidKey)
 
 const sendMessageToClient = (payload, id) => new Promise((resolve, reject) => {
-  const apigatewaymanagementapi = new AWS.ApiGatewayManagementApi({ apiVersion: '2029', endpoint: 'https://08l36ykm1d.execute-api.eu-north-1.amazonaws.com/dev' })
+  const apigatewaymanagementapi = new AWS.ApiGatewayManagementApi({ apiVersion: '2029', endpoint: 'https://7v320l37ab.execute-api.eu-north-1.amazonaws.com/dev' })
   apigatewaymanagementapi.postToConnection({
     ConnectionId: id,
-    Data: payload
+    Data: JSON.stringify(payload.payload)
   }, (err, data) => {
     if (err) {
       console.log('err is', err)
@@ -25,6 +25,7 @@ const sendMessageToClient = (payload, id) => new Promise((resolve, reject) => {
 
 function createPayload (event, data) {
   let payload
+  let msg
 
   switch (event) {
     case 'repository':
@@ -35,15 +36,18 @@ function createPayload (event, data) {
         organization: data.organization.login,
         link: data.repository.html_url
       }
+      msg = `${payload.action} ${payload.event} in organization ${payload.organization}`
       break
     case 'push':
+      console.log(data)
       payload = {
         event,
         pusher: data.pusher.name,
-        repository: data.repository,
+        repository: data.repository.full_name,
         organization: data.organization.login,
         link: data.head_commit.url
       }
+      msg = `${payload.event} to ${payload.repository} by ${payload.pusher}`
       break
     case 'issues':
       payload = {
@@ -53,6 +57,7 @@ function createPayload (event, data) {
         organization: data.organization.login,
         link: data.issue.html_url
       }
+      msg = `${payload.action} ${payload.event} in repository ${payload.repository}`
       break
     case 'project':
       payload = {
@@ -61,6 +66,7 @@ function createPayload (event, data) {
         name: data.project.name,
         link: data.project.html_url
       }
+      msg = `${payload.action} ${payload.event}: ${payload.name}`
       break
     case 'release':
       payload = {
@@ -70,14 +76,16 @@ function createPayload (event, data) {
         author: data.release.author.login,
         link: data.release.html_url
       }
+      msg = `${payload.action} ${payload.event} by ${payload.author}`
       break
     case 'deployment':
       payload = {
         event,
         environment: data.deployment.environment,
         creator: data.deployment.creator.login,
-        deploymentsURL: data.repository.deployments_url
+        link: data.repository.deployments_url
       }
+      msg = `new ${payload.event} by ${payload.creator}`
       break
     case 'fork':
       payload = {
@@ -85,23 +93,30 @@ function createPayload (event, data) {
         forkedFrom: data.repository.full_name,
         link: data.forkee.html_url
       }
+      msg = `new fork from ${payload.forkedFrom}`
       break
     case 'repository_vulnerability_alert':
       payload = {
         event,
-        repo: data.repository.html_url
+        repository: data.repository.full_name,
+        link: data.repository.html_url
       }
+      msg = `security alert in ${payload.repository}`
       break
   }
-  return JSON.stringify(payload)
+  payload.unseen = true
+  return {
+    payload,
+    msg
+  }
 }
 
 async function main (event, context) {
-  let data = JSON.parse(event.body)
-  let organization = data.organization.login
+  let body = JSON.parse(event.body)
+  let organization = body.organization.login
   let gitEvent = event.headers['X-GitHub-Event']
 
-  let payload = createPayload(gitEvent, data)
+  let payload = createPayload(gitEvent, body)
 
   const params = {
     TableName: 'userSettings',
@@ -132,14 +147,26 @@ async function main (event, context) {
         let userConnected = await dynamoDB.scan(paramsScan).promise()
         if (userConnected.Count && userConnected.Count !== 0) {
           await sendMessageToClient(payload, userConnected.Items[0].connectionID)
+        } else {
           const workerParams = {
             TableName: 'serviceWorkers',
             Key: {
               user: user.user
             }
           }
+          const notificationParams = {
+            TableName: 'notifications',
+            Item: {
+              user: user.user,
+              notification: JSON.stringify(payload.payload)
+            }
+          }
+          await dynamoDB.put(notificationParams).promise()
           let serviceWorker = await dynamoDB.get(workerParams).promise()
-          await webPush.sendNotification(JSON.parse(serviceWorker.Item.worker), payload)
+          await webPush.sendNotification(JSON.parse(serviceWorker.Item.worker), JSON.stringify({
+            title: 'Github Dashboard App',
+            body: payload.msg
+          }))
         }
       }
     }

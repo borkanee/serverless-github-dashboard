@@ -11,7 +11,7 @@ async function configureHook (data, token) {
     'name': 'web',
     'events': events,
     'config': {
-      'url': 'https://7vmkz7kzv2.execute-api.eu-north-1.amazonaws.com/dev/payload',
+      'url': 'https://v8ah3e45f1.execute-api.eu-north-1.amazonaws.com/dev/payload',
       'content_type': 'json'
     }
   }
@@ -24,8 +24,6 @@ async function configureHook (data, token) {
     headers: { 'Content-Type': 'application/json' }
   })
 
-  console.log(response)
-
   return {
     statusCode: response.status,
     headers: {
@@ -36,22 +34,9 @@ async function configureHook (data, token) {
 }
 
 module.exports.main = async (event, context) => {
-  if (!event.headers.Cookie) {
-    return {
-      statusCode: 401,
-      headers: {
-        'Access-Control-Allow-Credentials': true,
-        'Access-Control-Allow-Origin': 'https://910e6fe7.ngrok.io'
-      },
-      body: JSON.stringify({ 'message': 'Unauthorized' })
-    }
-  }
-
   const data = JSON.parse(event.body)
-
+  let token = cookie.parse(event.headers.Cookie || '').token || ''
   try {
-    let token = cookie.parse(event.headers.Cookie).token || ''
-
     return configureHook(data, token)
   } catch (err) {
     console.log(err)
