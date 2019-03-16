@@ -10,7 +10,7 @@ const privateVapidKey = 'HNWDlUbLUwtPU1gh_4WcUQo5zRdJZ_hLDCrhymeeJV0'
 webPush.setVapidDetails('mailto: grubesic.boris@gmail.com', publicVapidKey, privateVapidKey)
 
 const sendMessageToClient = (payload, id) => new Promise((resolve, reject) => {
-  const apigatewaymanagementapi = new AWS.ApiGatewayManagementApi({ apiVersion: '2029', endpoint: 'https://7v320l37ab.execute-api.eu-north-1.amazonaws.com/dev' })
+  const apigatewaymanagementapi = new AWS.ApiGatewayManagementApi({ apiVersion: '2029', endpoint: 'https://3owhikvdr6.execute-api.eu-north-1.amazonaws.com/prod' })
   apigatewaymanagementapi.postToConnection({
     ConnectionId: id,
     Data: JSON.stringify(payload.payload)

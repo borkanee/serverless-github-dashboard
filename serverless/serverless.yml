@@ -20,7 +20,7 @@ provider:
       Resource:
         - "arn:aws:execute-api:*:*:**/@connections/*"
 
-  stage: dev
+  stage: prod
   region: eu-north-1
 
   # you can define service wide environment variables here

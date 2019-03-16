@@ -33,7 +33,7 @@ class Dashboard extends Component {
 
     async removeNotifications() {
         try {
-            await fetch('https://v8ah3e45f1.execute-api.eu-north-1.amazonaws.com/dev/notifications/' + this.state.user.nick, {
+            await fetch('https://8i58zxdosl.execute-api.eu-north-1.amazonaws.com/prod/notifications/' + this.state.user.nick, {
                 method: 'DELETE',
                 credentials: 'include'
             })
@@ -44,7 +44,7 @@ class Dashboard extends Component {
 
     setupSocket() {
         this.setState({
-            socket: new WebSocket('wss://7v320l37ab.execute-api.eu-north-1.amazonaws.com/dev?user=' + this.state.user.nick)
+            socket: new WebSocket('wss://3owhikvdr6.execute-api.eu-north-1.amazonaws.com/prod?user=' + this.state.user.nick)
         })
 
         this.state.socket.addEventListener('open', event => {
@@ -65,7 +65,7 @@ class Dashboard extends Component {
         for (let i = 0; i < this.state.user.organizations.length; i++) {
             if (this.state.user.organizations[i].isAdmin && !this.state.user.organizations[i].hasHook) {
                 try {
-                    let hookResponse = await fetch('https://v8ah3e45f1.execute-api.eu-north-1.amazonaws.com/dev/webhooks', {
+                    let hookResponse = await fetch('https://8i58zxdosl.execute-api.eu-north-1.amazonaws.com/prod/webhooks', {
                         method: 'POST',
                         credentials: 'include',
                         headers: {
@@ -129,7 +129,7 @@ class Dashboard extends Component {
         this.setState({ isLoading: true })
 
         try {
-            let user = await fetch('https://v8ah3e45f1.execute-api.eu-north-1.amazonaws.com/dev/getUser', {
+            let user = await fetch('https://8i58zxdosl.execute-api.eu-north-1.amazonaws.com/prod/getUser', {
                 credentials: 'include'
             })
 
@@ -221,7 +221,7 @@ class Dashboard extends Component {
         } else {
             return (
                 <div className="text-center login-div">
-                    <a href='https://v8ah3e45f1.execute-api.eu-north-1.amazonaws.com/dev/auth' className="btn btn-github btn-lg active" role="button" aria-pressed="true">Login at Github</a>
+                    <a href='https://8i58zxdosl.execute-api.eu-north-1.amazonaws.com/prod/auth' className="btn btn-github btn-lg active" role="button" aria-pressed="true">Login at Github</a>
                 </div>
             )
         }
@@ -242,7 +242,7 @@ async function send(user) {
         applicationServerKey: urlBase64ToUint8Array(publicVapidKey)
     })
 
-    await fetch('https://v8ah3e45f1.execute-api.eu-north-1.amazonaws.com/dev/register', {
+    await fetch('https://8i58zxdosl.execute-api.eu-north-1.amazonaws.com/prod/register', {
         method: 'POST',
         body: JSON.stringify({
             subscription,

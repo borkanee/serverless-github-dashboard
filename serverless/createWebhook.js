@@ -11,7 +11,7 @@ async function configureHook (data, token) {
     'name': 'web',
     'events': events,
     'config': {
-      'url': 'https://v8ah3e45f1.execute-api.eu-north-1.amazonaws.com/dev/payload',
+      'url': 'https://8i58zxdosl.execute-api.eu-north-1.amazonaws.com/prod/payload',
       'content_type': 'json'
     }
   }
