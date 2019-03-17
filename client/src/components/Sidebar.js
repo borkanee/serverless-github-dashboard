@@ -14,13 +14,13 @@ class Sidebar extends Component {
         <div className='sidebar-sticky'>
           <ul className='nav flex-column'>
             <li className='nav-item'>
-              <a className={(this.props.active === PAGE.DASHBOARD) ? 'nav-link active' : 'nav-link'} onClick={this.props.displayDashboard} href='#'>
+              <a href='#' className={(this.props.active === PAGE.DASHBOARD) ? 'nav-link active' : 'nav-link'} onClick={this.props.displayDashboard} >
                 <span data-feather='home' />
                 Dashboard
               </a>
             </li>
             <li className='nav-item'>
-              <a className={(this.props.active === PAGE.NOTIFICATIONS) ? 'nav-link active' : 'nav-link'} onClick={this.props.displayNotifications} href='#'>
+              <a href='#' className={(this.props.active === PAGE.NOTIFICATIONS) ? 'nav-link active' : 'nav-link'} onClick={this.props.displayNotifications} >
                 <span data-feather='home' />
                 Notifications <span className='badge badge-light'>{this.props.notificationCounter}</span>
               </a>
