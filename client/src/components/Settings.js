@@ -58,8 +58,6 @@ class Settings extends Component {
           body: jsonBody
         })
 
-        console.log(res)
-
         window.sessionStorage.setItem(this.props.org, JSON.stringify(this.state.settings))
 
       } catch (err) {

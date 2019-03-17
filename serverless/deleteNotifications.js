@@ -36,7 +36,7 @@ async function main (event, context) {
       statusCode: 200,
       headers: {
         'Access-Control-Allow-Credentials': true,
-        'Access-Control-Allow-Origin': 'https://910e6fe7.ngrok.io'
+        'Access-Control-Allow-Origin': 'https://dhif4tawafcug.cloudfront.net'
       }
     }
   } catch (err) {
@@ -45,7 +45,7 @@ async function main (event, context) {
       statusCode: 500,
       headers: {
         'Access-Control-Allow-Credentials': true,
-        'Access-Control-Allow-Origin': 'https://910e6fe7.ngrok.io'
+        'Access-Control-Allow-Origin': 'https://dhif4tawafcug.cloudfront.net'
       }
     }
   }

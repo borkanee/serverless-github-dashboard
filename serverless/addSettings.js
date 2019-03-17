@@ -17,7 +17,6 @@ async function main (event, context) {
 
   try {
     let test = await dynamoDB.put(params).promise()
-    console.log(test)
     return {
       statusCode: 201,
       headers: {

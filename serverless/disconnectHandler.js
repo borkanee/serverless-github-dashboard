@@ -4,8 +4,6 @@ const AWS = require('aws-sdk')
 const dynamoDB = new AWS.DynamoDB.DocumentClient()
 
 async function main (event, context) {
-  console.log('disconnectar')
-
   let connectionID = event.requestContext.connectionId
 
   let params = {

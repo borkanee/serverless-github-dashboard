@@ -15,7 +15,7 @@ async function main (event, context) {
       return {
         statusCode: 401,
         headers: {
-          'Access-Control-Allow-Origin': 'https://910e6fe7.ngrok.io',
+          'Access-Control-Allow-Origin': 'https://dhif4tawafcug.cloudfront.net',
           'Access-Control-Allow-Credentials': true
         },
         body: JSON.stringify({ 'message': 'Unauthorized' })
@@ -97,7 +97,7 @@ async function main (event, context) {
       return {
         statusCode: 200,
         headers: {
-          'Access-Control-Allow-Origin': 'https://910e6fe7.ngrok.io',
+          'Access-Control-Allow-Origin': 'https://dhif4tawafcug.cloudfront.net',
           'Access-Control-Allow-Credentials': true
         },
         body: JSON.stringify(user)
@@ -108,7 +108,7 @@ async function main (event, context) {
     return {
       statusCode: 500,
       headers: {
-        'Access-Control-Allow-Origin': 'https://910e6fe7.ngrok.io',
+        'Access-Control-Allow-Origin': 'https://dhif4tawafcug.cloudfront.net',
         'Access-Control-Allow-Credentials': true
       },
       body: JSON.stringify({ message: 'Something went wrong...' })

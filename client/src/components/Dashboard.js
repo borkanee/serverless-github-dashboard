@@ -24,7 +24,7 @@ class Dashboard extends Component {
     }
 
     async componentDidMount() {
-        await this.doLogin()
+        await this.login()
     }
 
     async componentWillUnmount() {
@@ -48,11 +48,10 @@ class Dashboard extends Component {
         })
 
         this.state.socket.addEventListener('open', event => {
-            console.log('ÖPPEN SOCKET')
+            console.log('Socket open...')
         })
 
         this.state.socket.addEventListener('message', event => {
-            console.log('Message from server ', event.data)
             let data = JSON.parse(event.data)
             this.setState({
                 notificationCounter: this.state.notificationCounter + 1,
@@ -82,7 +81,7 @@ class Dashboard extends Component {
         }
     }
 
-    logout() {
+    async logout() {
         this.setState({
             user: {},
             activePage: PAGE.DASHBOARD,
@@ -90,6 +89,15 @@ class Dashboard extends Component {
         })
         window.sessionStorage.clear()
         this.state.socket.close()
+        try {
+            let test = await fetch('https://8i58zxdosl.execute-api.eu-north-1.amazonaws.com/prod/logout', {
+                method: 'POST',
+                credentials: 'include'
+            })
+            console.log(test)
+        } catch (err) {
+            console.log(err)
+        }
     }
 
     resetCounter() {
@@ -104,7 +112,7 @@ class Dashboard extends Component {
         this.removeNotifications()
     }
 
-    displayDashboard(e) {
+    displayDashboard() {
         this.setState({
             activePage: PAGE.DASHBOARD,
             chosenOrg: {}
@@ -125,7 +133,7 @@ class Dashboard extends Component {
         })
     }
 
-    async doLogin(token) {
+    async login(token) {
         this.setState({ isLoading: true })
 
         try {
@@ -139,9 +147,7 @@ class Dashboard extends Component {
             }
 
             if (user.status === 200) {
-                // window.sessionStorage.setItem('token', token)
                 user = await user.json()
-                console.log(user)
 
                 this.setState({
                     isLoading: false,

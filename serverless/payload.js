@@ -39,7 +39,6 @@ function createPayload (event, data) {
       msg = `${payload.action} ${payload.event} in organization ${payload.organization}`
       break
     case 'push':
-      console.log(data)
       payload = {
         event,
         pusher: data.pusher.name,

@@ -85,6 +85,13 @@ functions:
           path: webhooks
           method: POST
           cors: true
+  logout:
+    handler: logout.main
+    events:
+      - http:
+          path: logout
+          method: POST
+          cors: true
   corsHandler:
     handler: corsHandler.main
     events:
@@ -94,6 +101,10 @@ functions:
           cors: true
       - http:
           path: notifications/{user}
+          method: OPTIONS
+          cors: true
+      - http:
+          path: logout
           method: OPTIONS
           cors: true    
   payload:
