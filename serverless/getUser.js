@@ -4,6 +4,10 @@ const fetch = require('node-fetch')
 const cookie = require('cookie')
 const AWS = require('aws-sdk')
 const dynamoDB = new AWS.DynamoDB.DocumentClient()
+const headers = {
+  'Access-Control-Allow-Origin': process.env.CLIENT_BASE_URL,
+  'Access-Control-Allow-Credentials': true
+}
 
 async function main (event, context) {
   let token = cookie.parse(event.headers.Cookie || '').token || ''
@@ -14,10 +18,7 @@ async function main (event, context) {
     if (user.status === 401) {
       return {
         statusCode: 401,
-        headers: {
-          'Access-Control-Allow-Origin': 'https://dhif4tawafcug.cloudfront.net',
-          'Access-Control-Allow-Credentials': true
-        },
+        headers,
         body: JSON.stringify({ 'message': 'Unauthorized' })
       }
     }
@@ -96,10 +97,7 @@ async function main (event, context) {
 
       return {
         statusCode: 200,
-        headers: {
-          'Access-Control-Allow-Origin': 'https://dhif4tawafcug.cloudfront.net',
-          'Access-Control-Allow-Credentials': true
-        },
+        headers,
         body: JSON.stringify(user)
       }
     }
@@ -107,10 +105,7 @@ async function main (event, context) {
     console.log(err)
     return {
       statusCode: 500,
-      headers: {
-        'Access-Control-Allow-Origin': 'https://dhif4tawafcug.cloudfront.net',
-        'Access-Control-Allow-Credentials': true
-      },
+      headers,
       body: JSON.stringify({ message: 'Something went wrong...' })
     }
   }

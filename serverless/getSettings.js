@@ -2,6 +2,10 @@
 
 const AWS = require('aws-sdk')
 const dynamoDB = new AWS.DynamoDB.DocumentClient()
+const headers = {
+  'Access-Control-Allow-Origin': '*',
+  'Access-Control-Allow-Credential': true
+}
 
 async function main (event, context) {
   const params = {
@@ -18,28 +22,19 @@ async function main (event, context) {
     if (data.Item) {
       return {
         statusCode: 200,
-        headers: {
-          'Access-Control-Allow-Origin': '*',
-          'Access-Control-Allow-Credential': true
-        },
+        headers,
         body: data.Item.settings
       }
     } else {
       return {
         statusCode: 204,
-        headers: {
-          'Access-Control-Allow-Origin': '*',
-          'Access-Control-Allow-Credential': true
-        }
+        headers
       }
     }
   } catch (err) {
     return {
       statusCode: 500,
-      headers: {
-        'Access-Control-Allow-Origin': '*',
-        'Access-Control-Allow-Credential': true
-      }
+      headers
     }
   }
 }

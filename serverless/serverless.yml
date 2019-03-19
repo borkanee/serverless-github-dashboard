@@ -28,6 +28,10 @@ provider:
     GITHUB_CLIENT: ${file(./config/config.json):GITHUB_CLIENT}
     GITHUB_CLIENT_SECRET: ${file(./config/config.json):GITHUB_CLIENT_SECRET}
     GITHUB_API_STATE: ${file(./config/config.json):GITHUB_API_STATE}
+    CLIENT_BASE_URL: ${file(./config/config.json):CLIENT_BASE_URL}
+    PUBLIC_VAPID_KEY: ${file(./config/config.json):PUBLIC_VAPID_KEY}
+    PRIVATE_VAPID_KEY: ${file(./config/config.json):PRIVATE_VAPID_KEY}
+    EMAIL: ${file(./config/config.json):EMAIL}
 
 functions:
   authorization:

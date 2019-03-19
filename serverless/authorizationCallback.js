@@ -26,10 +26,10 @@ module.exports.main = async (event, context) => {
     return {
       statusCode: 301,
       headers: {
-        'Access-Control-Allow-Origin': 'https://dhif4tawafcug.cloudfront.net',
+        'Access-Control-Allow-Origin': process.env.CLIENT_BASE_URL,
         'Access-Control-Allow-Credential': true,
         'Set-Cookie': `token=${res.access_token}; Max-Age=3600; HttpOnly; Secure;`,
-        'Location': 'https://dhif4tawafcug.cloudfront.net'
+        'Location': process.env.CLIENT_BASE_URL
 
       }
     }

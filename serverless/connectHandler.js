@@ -4,7 +4,7 @@ const AWS = require('aws-sdk')
 const dynamoDB = new AWS.DynamoDB.DocumentClient()
 
 async function main (event, context) {
-  if (event.headers.Origin !== 'https://dhif4tawafcug.cloudfront.net') {
+  if (event.headers.Origin !== process.env.CLIENT_BASE_URL) {
     return {
       statusCode: 404
     }

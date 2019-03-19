@@ -28,7 +28,7 @@ async function configureHook (data, token) {
     statusCode: response.status,
     headers: {
       'Access-Control-Allow-Credentials': true,
-      'Access-Control-Allow-Origin': 'https://dhif4tawafcug.cloudfront.net'
+      'Access-Control-Allow-Origin': process.env.CLIENT_BASE_URL
     }
   }
 }
@@ -44,7 +44,7 @@ module.exports.main = async (event, context) => {
       statusCode: 500,
       headers: {
         'Access-Control-Allow-Credentials': true,
-        'Access-Control-Allow-Origin': 'https://dhif4tawafcug.cloudfront.net'
+        'Access-Control-Allow-Origin': process.env.CLIENT_BASE_URL
       }
     }
   }

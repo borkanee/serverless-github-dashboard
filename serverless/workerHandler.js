@@ -1,8 +1,10 @@
 'use strict'
 
-const webPush = require('web-push')
 const AWS = require('aws-sdk')
 const dynamoDB = new AWS.DynamoDB.DocumentClient()
+const headers = {
+  'Access-Control-Allow-Origin': '*'
+}
 
 async function main (event, context) {
   let data = JSON.parse(event.body)
@@ -19,17 +21,13 @@ async function main (event, context) {
     await dynamoDB.put(params).promise()
     return {
       statusCode: 201,
-      headers: {
-        'Access-Control-Allow-Origin': '*'
-      }
+      headers
     }
   } catch (err) {
     console.log(err)
     return {
       statusCode: 500,
-      headers: {
-        'Access-Control-Allow-Origin': '*'
-      }
+      headers
     }
   }
 }

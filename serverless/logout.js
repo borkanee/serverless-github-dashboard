@@ -5,7 +5,7 @@ async function main (event, context) {
     statusCode: 200,
     headers: {
       'Access-Control-Allow-Credential': true,
-      'Access-Control-Allow-Origin': 'https://dhif4tawafcug.cloudfront.net',
+      'Access-Control-Allow-Origin': process.env.CLIENT_BASE_URL,
       'Set-Cookie': 'token=; Max-Age=-3600; HttpOnly; Secure;'
     }
   }

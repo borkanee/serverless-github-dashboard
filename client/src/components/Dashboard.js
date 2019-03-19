@@ -4,15 +4,11 @@ import Sidebar from './Sidebar'
 import Organization from './Organization'
 import Notifications from './Notifications'
 import OrganizationDetails from './OrganizationDetails'
+import PAGE from './Page'
 import '../bootstrap-social.css'
 
-const publicVapidKey = 'BGqqZm74jsX141bCEXum-EePHgPFtTCPdeptiUR7KLQDKr_VfGc6fAu9wTZ9lvD8PyMcsaMqdEFiNvftmbmtZ7o'
 
-const PAGE = {
-    DASHBOARD: 0,
-    DETAILS: 1,
-    NOTIFICATIONS: 2
-}
+const publicVapidKey = 'BGqqZm74jsX141bCEXum-EePHgPFtTCPdeptiUR7KLQDKr_VfGc6fAu9wTZ9lvD8PyMcsaMqdEFiNvftmbmtZ7o'
 
 
 class Dashboard extends Component {
@@ -64,7 +60,7 @@ class Dashboard extends Component {
         for (let i = 0; i < this.state.user.organizations.length; i++) {
             if (this.state.user.organizations[i].isAdmin && !this.state.user.organizations[i].hasHook) {
                 try {
-                    let hookResponse = await fetch('https://8i58zxdosl.execute-api.eu-north-1.amazonaws.com/prod/webhooks', {
+                    await fetch('https://8i58zxdosl.execute-api.eu-north-1.amazonaws.com/prod/webhooks', {
                         method: 'POST',
                         credentials: 'include',
                         headers: {
@@ -133,7 +129,7 @@ class Dashboard extends Component {
         })
     }
 
-    async login(token) {
+    async login() {
         this.setState({ isLoading: true })
 
         try {
@@ -160,8 +156,8 @@ class Dashboard extends Component {
                     notificationCounter: user.notifications.length,
                     notifications: user.notifications
                 })
-                await this.setupSocket()
-                await this.setupWebhooks()
+                this.setupSocket()
+                this.setupWebhooks()
 
                 if ('serviceWorker' in navigator) {
                     send(user.nick)
@@ -193,7 +189,7 @@ class Dashboard extends Component {
             }
 
             if (this.state.activePage === PAGE.DETAILS) {
-                activePage = <OrganizationDetails {...this.state.chosenOrg} user={this.state.user.nick} token={this.state.user.token} />
+                activePage = <OrganizationDetails {...this.state.chosenOrg} user={this.state.user.nick} />
             }
 
             if (this.state.activePage === PAGE.NOTIFICATIONS) {

@@ -4,10 +4,7 @@ const AWS = require('aws-sdk')
 const dynamoDB = new AWS.DynamoDB.DocumentClient()
 const webPush = require('web-push')
 
-const publicVapidKey = 'BGqqZm74jsX141bCEXum-EePHgPFtTCPdeptiUR7KLQDKr_VfGc6fAu9wTZ9lvD8PyMcsaMqdEFiNvftmbmtZ7o'
-const privateVapidKey = 'HNWDlUbLUwtPU1gh_4WcUQo5zRdJZ_hLDCrhymeeJV0'
-
-webPush.setVapidDetails('mailto: grubesic.boris@gmail.com', publicVapidKey, privateVapidKey)
+webPush.setVapidDetails(`mailto: ${process.env.EMAIL}`, process.env.PUBLIC_VAPID_KEY, process.env.PRIVATE_VAPID_KEY)
 
 const sendMessageToClient = (payload, id) => new Promise((resolve, reject) => {
   const apigatewaymanagementapi = new AWS.ApiGatewayManagementApi({ apiVersion: '2029', endpoint: 'https://3owhikvdr6.execute-api.eu-north-1.amazonaws.com/prod' })

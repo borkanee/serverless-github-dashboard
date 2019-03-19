@@ -2,6 +2,10 @@
 
 const AWS = require('aws-sdk')
 const dynamoDB = new AWS.DynamoDB.DocumentClient()
+const headers = {
+  'Access-Control-Allow-Credentials': true,
+  'Access-Control-Allow-Origin': process.env.CLIENT_BASE_URL
+}
 
 async function main (event, context) {
   let user = event.pathParameters.user
@@ -34,19 +38,13 @@ async function main (event, context) {
 
     return {
       statusCode: 200,
-      headers: {
-        'Access-Control-Allow-Credentials': true,
-        'Access-Control-Allow-Origin': 'https://dhif4tawafcug.cloudfront.net'
-      }
+      headers
     }
   } catch (err) {
     console.logg(err)
     return {
       statusCode: 500,
-      headers: {
-        'Access-Control-Allow-Credentials': true,
-        'Access-Control-Allow-Origin': 'https://dhif4tawafcug.cloudfront.net'
-      }
+      headers
     }
   }
 }

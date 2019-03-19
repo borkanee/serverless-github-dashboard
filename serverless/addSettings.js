@@ -16,9 +16,9 @@ async function main (event, context) {
   }
 
   try {
-    let test = await dynamoDB.put(params).promise()
+    await dynamoDB.put(params).promise()
     return {
-      statusCode: 201,
+      statusCode: 200,
       headers: {
         'Access-Control-Allow-Origin': '*'
       }

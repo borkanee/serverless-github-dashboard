@@ -1,11 +1,6 @@
 
 import React, { Component } from 'react'
-
-const PAGE = {
-  DASHBOARD: 0,
-  DETAILS: 1,
-  NOTIFICATIONS: 2
-}
+import PAGE from './Page'
 
 class Sidebar extends Component {
   render () {

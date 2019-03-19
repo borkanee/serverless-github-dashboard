@@ -5,10 +5,10 @@ class Notification extends Component {
     return Object.keys(this.props.notification).map(key => {
       if (key === 'link') {
         return (
-          <a href={this.props.notification.link} target='_blank' className='btn btn-primary'>GitHub</a>
+          <a href={this.props.notification.link} rel='noopener noreferrer' target='_blank' className='btn btn-primary'>GitHub</a>
         )
       } else if (key === 'unseen') {
-        return
+        return false
       } else {
         return (
           <p className='card-text'>{key}: {this.props.notification[key]}</p>
